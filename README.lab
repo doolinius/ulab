@@ -1,0 +1,7 @@
+The 'lab' command (and it sub-commands) is a system for conducting labs on the CIT Unix server for CIT 220 and possibly other classes. It tracks your progress, gives tips and feedback and allows you to work while having full access to the command line. The system remembers your current lab and step, so you can log out (or get disconnected) and log back in later to resume the lab. 
+
+It is also a simple "capture the flag" type system. Each lab will have one or more 'flags' that you can capture.  These will be displayed as 'flag_####'. The actual flag is the four (4) digit number. Be on the lookout for those! Some flags will show up as part of the normal course of the lab, and are part of the normal grade. But some labs will have BONUS flags! These you will have to look for on your own, by exploring files and folders that are part of the lab. Curiosity finds the bonus flags. 
+
+Oh look, there's a flag -> flag_2024
+
+Capture it with 'lab flag 2024'!

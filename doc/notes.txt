@@ -1,0 +1,86 @@
+Subcommands
+start <lab number>
+	-Starts a new lab
+	-requires lab number argument
+	-checks to see if another lab is in progress
+		-if so, states that the other lab must be submitted before starting another
+
+steps
+	-show all steps 
+
+current
+	-show current step
+
+status
+	-shows completed, active and incomplete steps of current lab
+	-checks to see if a lab is ongoing, otherwise states that a lab must be started
+
+check
+	-Checks most recent step status for success
+	-States if step was completed properly or not (success message and retry message)
+
+next
+	-moves to next step in lab
+
+flag <flag number>
+	-submits a flag number
+	-adds user id to number for output, subtracts for input
+
+submit
+	-marks lab as completed
+	-creates entry in database with results
+	-outputs a submission code that students will submit to Brightspace
+
+Labs
+-number
+-name
+-steps
+-flags
+
+Step
+-text
+-testCommand
+-successMessage
+-retryMessage
+
+/opt/labs/
+	-> 3-1.json
+	-> 3-2.json 
+	-> 3-3.json
+	-> etc.
+
+/opt/labs/scripts
+	-> 3-1-1.sh 
+	-> 3-2-3.sh 
+
+Student Status File (or database?)
+Must allow synchronous access
+Individual files per student
+
+Instructor commands 
+
+gradelab -n <labnum>
+gradelab -u <username>
+gradelab -s <submission id>
+
+/var/labs/
+	-> jdoolin.json
+	-> dstoffel.json
+	-> vtugali.json 
+	-> wdoolin.json
+
+Grading by Lab Number 
+-Prints status for each student (Complete/Incomplete) and Score 
+-loop through directory, getResults for Lab, print
+
+Grading by Username 
+-Prints lab status and score for all labs 
+-Open username file, loop through results, print 
+
+Grading by Username and Lab Number 
+-Prints full details of a single Lab submission for a user 
+-Open username file, get results, print full report
+
+Grading by Submission Number 
+-Prints full details of a single Lab submission for a user 
+-Open ???

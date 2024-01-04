@@ -1,0 +1,35 @@
+{
+    "number": "3-1",
+    "name": "First Login",
+    "description": "Welcome to the CIT Unix server. In this lab, you will be introduced to the 'lab' program, change your password and a few other basics.",
+    "steps": [
+        {
+            "text": "The first thing you need to do is change your password. Make it something long, but easy to remember.",
+            "tasks": [
+                "passwd  (no, that's not a typo, just type that command exactly)"
+            ],
+            "tips": "The 'passwd' command does NOT show your password as you type it, not even with asterisks. It may seem like it's not accepting input, but it is. This is done for security reasons, so that any nosy person looking over your shoulder cannot even see how long your password is.",
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "successMessage": "Excellent! Remember that this is NOT the same as your WVNCC student password. Make sure not to forget your password. It might even be a good time to start using a password manager!",
+            "retryMessage": "Hmmm... Looks like something went wrong. Try that again."
+        },
+        {
+            "text":"Now let's take a look at the 'lab' system that you're using. We'll do this by printing the contents of a file to your terminal screen.",
+            "tasks": ["cat README.lab"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "",
+            "successMessage": "It should not take long to get used to the lab tool.",
+            "retryMessage": "I'm not sure why this would fail."
+        }
+    ],
+    "flags": [2024],
+    "bonusFlags": [4200]
+}
