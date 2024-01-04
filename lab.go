@@ -30,7 +30,7 @@ type Lab struct {
 	BonusFlags  []int  `json:"bonusFlags"`
 }
 
-func (l *Lab) printSteps(s *Status) {
+func (l *Lab) PrintSteps(s *Status) {
 	results := s.getResults(l.Number)
 	fmt.Printf("Lab %s Steps\n\n", l.Number)
 	fmt.Printf("   Flags: %d	Bonus Flags: %d\n", len(l.Flags), len(l.BonusFlags))
@@ -44,7 +44,7 @@ func (l *Lab) printSteps(s *Status) {
 	}
 }
 
-func (l *Lab) check(step int) bool {
+func (l *Lab) Check(step int) bool {
 	test := l.Steps[step].Test
 	switch test.TestType {
 	case "script":
@@ -79,11 +79,11 @@ func (l *Lab) check(step int) bool {
 	return false
 }
 
-func (l *Lab) printStep(stepNum int) {
-	l.Steps[stepNum].printTasks(stepNum)
+func (l *Lab) PrintStep(stepNum int) {
+	l.Steps[stepNum].PrintTasks(stepNum)
 }
 
-func (s *Step) printTasks(stepNum int) {
+func (s *Step) PrintTasks(stepNum int) {
 	fmt.Printf("Step %d: %s\n\n", stepNum, s.Text)
 	fmt.Println("Perform the following tasks/commands:")
 	for _, task := range s.Tasks {
@@ -95,7 +95,7 @@ func (s *Step) printTasks(stepNum int) {
 	}
 }
 
-func (l *Lab) checkFlag(flagNum int) bool {
+func (l *Lab) CheckFlag(flagNum int) bool {
 	for _, flag := range l.Flags {
 		if flag == flagNum {
 			return true

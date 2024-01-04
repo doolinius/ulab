@@ -22,7 +22,7 @@ type LabResult struct {
 
 type Status struct {
 	Username    string                `json:"username"`
-	InProgress  string                `json:"inProgress"`
+	CurrentLab  string                `json:"currentLab"`
 	CurrentStep int                   `json:"currentStep"`
 	Results     map[string]*LabResult `json:"results"`
 }
@@ -48,13 +48,13 @@ func (s *Status) init() {
 	}
 }
 
-func (s *Status) flagStatus(l *Lab) (int, int) {
-	result := s.getResults(s.InProgress)
+func (s *Status) FlagStatus(l *Lab) (int, int) {
+	result := s.getResults(s.CurrentLab)
 	return len(result.Flags), len(l.Flags)
 }
 
-func (s *Status) stepStatus(l *Lab) (int, int) {
-	result := s.getResults(s.InProgress)
+func (s *Status) StepStatus(l *Lab) (int, int) {
+	result := s.getResults(s.CurrentLab)
 	numSteps := 0
 	for _, stepStatus := range result.Steps {
 		if stepStatus == "success" {
@@ -64,12 +64,12 @@ func (s *Status) stepStatus(l *Lab) (int, int) {
 	return numSteps, len(l.Steps)
 }
 
-func (s *Status) scoreReport(l *Lab) {
+func (s *Status) ScoreReport(l *Lab) {
 	score := 0
-	result := s.getResults(s.InProgress)
+	result := s.getResults(s.CurrentLab)
 	numFlags := len(result.Flags)
 	numBonusFlags := len(result.BonusFlags)
-	numSteps, numTotalSteps := s.stepStatus(l)
+	numSteps, numTotalSteps := s.StepStatus(l)
 
 	score = numSteps + numFlags + numBonusFlags
 	fmt.Printf("Steps completed: %d/%d\n", numSteps, numTotalSteps)
@@ -86,7 +86,7 @@ func (s *Status) submissionCode(time string) string {
 	return fmt.Sprintf("%d", sum)
 }
 
-func (s *Status) submit(lab *Lab) {
+func (s *Status) Submit(lab *Lab) {
 	result := s.getResults(lab.Number)
 	t := time.Now()
 	result.FinishTime = fmt.Sprintf("%d-%02d-%02dT%02d:%02d",
@@ -94,12 +94,12 @@ func (s *Status) submit(lab *Lab) {
 		t.Hour(), t.Minute())
 	result.SubmissionCode = s.submissionCode(result.FinishTime)
 	fmt.Printf("Submission Code: %s\n", result.SubmissionCode)
-	s.InProgress = ""
+	s.CurrentLab = ""
 	s.CurrentStep = -1
-	s.save()
+	s.Save()
 }
 
-func (s *Status) newLab(lab *Lab) {
+func (s *Status) NewLab(lab *Lab) {
 	var newResult = LabResult{}
 	t := time.Now()
 	newResult.Number = lab.Number
@@ -133,7 +133,7 @@ func (s *Status) getResults(labNum string) *LabResult {
 	return nil
 }
 
-func (s *Status) addFlag(labNum string, flagNum int) {
+func (s *Status) AddFlag(labNum string, flagNum int) {
 	result := s.getResults(labNum)
 	//fmt.Printf("Result: %v  Flagnum: %d\n", result, flagNum)
 	if slices.Contains(result.Flags, flagNum) {
@@ -143,18 +143,18 @@ func (s *Status) addFlag(labNum string, flagNum int) {
 	result.Flags = append(result.Flags, flagNum)
 	//fmt.Printf("Result Flags: %v\n", result.Flags)
 	//fmt.Printf("Result Flags: %v\n", s.Results[1].Flags)
-	s.save()
+	s.Save()
 }
 
-func (s *Status) inProgress() (string, bool) {
-	if s.InProgress == "" {
+func (s *Status) InProgress() (string, bool) {
+	if s.CurrentLab == "" {
 		return "", false
 	} else {
-		return s.InProgress, true
+		return s.CurrentLab, true
 	}
 }
 
-func (s *Status) complete(labNum string, stepNum int) {
+func (s *Status) Complete(labNum string, stepNum int) {
 	result := s.getResults(labNum)
 	result.Steps[stepNum] = "success"
 	/*
@@ -167,7 +167,7 @@ func (s *Status) complete(labNum string, stepNum int) {
 	*/
 }
 
-func (s *Status) save() {
+func (s *Status) Save() {
 	json, err := json.MarshalIndent(s, "", "	")
 	if err != nil {
 		fmt.Printf("Error Marshaling Status Data")
@@ -178,7 +178,7 @@ func (s *Status) save() {
 	//os.WriteFile(s.Username+".json", json, fs.)
 }
 
-func readStatusFile(username string, s *Status) {
+func ReadStatusFile(username string, s *Status) {
 	jsonData, err := os.ReadFile(username + ".json")
 	if err != nil {
 		fmt.Printf("Could not open user file.")

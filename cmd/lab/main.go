@@ -19,7 +19,7 @@ func main() {
 		fmt.Printf("User information not found.\n")
 		os.Exit(1)
 	}
-	ulab.readStatusFile(user.Username, &userStatus)
+	ulab.ReadStatusFile(user.Username, &userStatus)
 	//userStatus.init()
 
 	// Check for subcommand
@@ -39,25 +39,25 @@ func main() {
 		}
 	case "steps":
 		// TODO: necessary checks
-		if userStatus.InProgress == "" {
+		if userStatus.CurrentLab == "" {
 			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
 		}
-		lab := openLabFile(userStatus.InProgress)
-		lab.printSteps(&userStatus)
+		lab := openLabFile(userStatus.CurrentLab)
+		lab.PrintSteps(&userStatus)
 	case "current":
 		// TODO: necessary checks
-		if userStatus.InProgress == "" {
+		if userStatus.CurrentLab == "" {
 			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
 		}
-		lab := openLabFile(userStatus.InProgress)
-		lab.printStep(userStatus.CurrentStep)
+		lab := openLabFile(userStatus.CurrentLab)
+		lab.PrintStep(userStatus.CurrentStep)
 	case "check":
 		// TODO: necessary checks
-		if userStatus.InProgress == "" {
+		if userStatus.CurrentLab == "" {
 			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
@@ -66,17 +66,17 @@ func main() {
 		labCheck(&userStatus)
 	case "next":
 		// do necessary checks
-		if userStatus.InProgress == "" {
+		if userStatus.CurrentLab == "" {
 			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
 		}
-		lab := openLabFile(userStatus.InProgress)
+		lab := openLabFile(userStatus.CurrentLab)
 		labNext(lab, &userStatus)
 	case "flag":
 		// TODO: Check arg numbers
 		// TODO: necessary checks
-		if userStatus.InProgress == "" {
+		if userStatus.CurrentLab == "" {
 			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
@@ -89,22 +89,22 @@ func main() {
 			if err != nil {
 				fmt.Printf("Flag must be a valid number")
 			}
-			lab := openLabFile(userStatus.InProgress)
-			if lab.checkFlag(flagNum) {
+			lab := openLabFile(userStatus.CurrentLab)
+			if lab.CheckFlag(flagNum) {
 				fmt.Printf("SUCCESS! You've captured Lab %s Flag %d\n", lab.Number, flagNum)
-				userStatus.addFlag(lab.Number, flagNum)
+				userStatus.AddFlag(lab.Number, flagNum)
 			} else {
 				fmt.Printf("Invalid flag number (%d) for Lab %s!\n", flagNum, lab.Number)
 			}
 		}
 	case "submit":
 		// TODO: necessary checks
-		if userStatus.InProgress == "" {
+		if userStatus.CurrentLab == "" {
 			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
 		}
-		lab := openLabFile(userStatus.InProgress)
+		lab := openLabFile(userStatus.CurrentLab)
 		labSubmit(&userStatus, lab)
 	case "help":
 		printUsage()
@@ -115,10 +115,10 @@ func main() {
 }
 
 func labCheck(s *ulab.Status) {
-	l := openLabFile(s.InProgress)
+	l := openLabFile(s.CurrentLab)
 	// check status of current step
-	if l.check(s.CurrentStep) {
-		s.complete(l.Number, s.CurrentStep)
+	if l.Check(s.CurrentStep) {
+		s.Complete(l.Number, s.CurrentStep)
 		answer := yesOrNo("Would you like to move on to the next step?")
 		if answer == "yes" {
 			labNext(l, s)
@@ -129,7 +129,7 @@ func labCheck(s *ulab.Status) {
 func labNext(l *ulab.Lab, s *ulab.Status) {
 	s.CurrentStep++
 	step := l.Steps[s.CurrentStep]
-	step.printTasks(s.CurrentStep)
+	step.PrintTasks(s.CurrentStep)
 }
 
 func printUsage() {
@@ -153,14 +153,14 @@ func labSubmit(s *ulab.Status, l *ulab.Lab) {
 	// check for unfinished steps
 	// print those
 	done := true // if there any unfinished steps, or uncaptured flags
-	success, stepsTotal := s.stepStatus(l)
+	success, stepsTotal := s.StepStatus(l)
 	if success == stepsTotal {
 		fmt.Printf("Great job, you've finished all of the steps for this lab!\n")
 	} else {
 		fmt.Printf("You have %d steps left to complete.\n", stepsTotal-success)
 		done = false
 	}
-	flagsCaptured, flagsTotal := s.stepStatus(l)
+	flagsCaptured, flagsTotal := s.StepStatus(l)
 	if flagsCaptured == flagsTotal {
 		fmt.Printf("Nicely done, you've finished all of the steps for this lab!\n")
 	} else {
@@ -174,7 +174,7 @@ func labSubmit(s *ulab.Status, l *ulab.Lab) {
 			os.Exit(1)
 		}
 	}
-	s.submit(l)
+	s.Submit(l)
 	// copy command history file
 }
 
@@ -192,7 +192,7 @@ func yesOrNo(prompt string) string {
 func labStart(labNum string, u *user.User, s *ulab.Status) {
 	//fmt.Printf("Attempting to start Lab %s\n", labNum)
 	// check to see if lab number exists
-	curLabNum, labInProgress := s.inProgress()
+	curLabNum, labInProgress := s.InProgress()
 	if labInProgress {
 		answer := ""
 		fmt.Printf("Lab %s appears to be in progress. ", curLabNum)
@@ -214,11 +214,11 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 	lab := openLabFile(labNum)
 
 	// Mark first step as in-progress for user
-	s.InProgress = lab.Number
+	s.CurrentLab = lab.Number
 	s.CurrentStep = 0
 	// Add new LabResult field to Status
-	s.newLab(lab)
-	s.save()
+	s.NewLab(lab)
+	s.Save()
 
 	// Print greeting
 	fmt.Printf("\nWelcome to Lab %s - %s\n\n", lab.Number, lab.Name)
@@ -229,7 +229,7 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 
 	// Get first step
 	firstStep := lab.Steps[0]
-	firstStep.printTasks(1)
+	firstStep.PrintTasks(1)
 
 }
 
