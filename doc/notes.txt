@@ -44,14 +44,15 @@ Step
 -retryMessage
 
 /opt/labs/
-	-> 3-1.json
-	-> 3-2.json 
-	-> 3-3.json
+	-> 3-1
+		-> lab.json 
+		-> testScripts/
+			-> password.sh
+		-> dataFiles/
+			-> lab3-1.zip
+	-> 3-2
+	-> 3-3
 	-> etc.
-
-/opt/labs/scripts
-	-> 3-1-1.sh 
-	-> 3-2-3.sh 
 
 Student Status File (or database?)
 Must allow synchronous access

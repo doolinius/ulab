@@ -93,6 +93,9 @@ func main() {
 			if lab.CheckFlag(flagNum) {
 				fmt.Printf("SUCCESS! You've captured Lab %s Flag %d\n", lab.Number, flagNum)
 				userStatus.AddFlag(lab.Number, flagNum)
+			} else if lab.CheckBonusFlag(flagNum) {
+				fmt.Printf("SUCCESS! You've captured Lab %s BONUS Flag %d\n", lab.Number, flagNum)
+				userStatus.AddFlag(lab.Number, flagNum, true)
 			} else {
 				fmt.Printf("Invalid flag number (%d) for Lab %s!\n", flagNum, lab.Number)
 			}

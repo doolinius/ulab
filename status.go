@@ -133,10 +133,18 @@ func (s *Status) getResults(labNum string) *LabResult {
 	return nil
 }
 
-func (s *Status) AddFlag(labNum string, flagNum int) {
+func (s *Status) AddFlag(labNum string, flagNum int, bOpt ...bool) {
+	bonus := false
+	if len(bOpt) > 1 {
+		bonus = bOpt[0]
+	}
 	result := s.getResults(labNum)
+	flagList := result.Flags
+	if bonus {
+		flagList = result.BonusFlags
+	}
 	//fmt.Printf("Result: %v  Flagnum: %d\n", result, flagNum)
-	if slices.Contains(result.Flags, flagNum) {
+	if slices.Contains(flagList, flagNum) {
 		fmt.Printf("Flag %d has already been captured\n", flagNum)
 		return
 	}

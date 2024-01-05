@@ -26,8 +26,20 @@
                 "condition": true
             },
             "tips": "",
-            "successMessage": "It should not take long to get used to the lab tool.",
+            "successMessage": "The 'cat' command allows you to dump the contents of a file to the terminal and view the contents of the file. Try this with any text file! It should not take long to get used to the lab tool. Ask your instructor if you need any help, or come across any problems with 'lab'.",
             "retryMessage": "I'm not sure why this would fail."
+        },
+        {
+            "text":"See your Home Directory and Delete a File",
+            "tasks":["pwd", "ls", "rm delete_me.txt", "ls"],
+            "test": {
+                "testType": "command",
+                "command": "ls delete_me.txt",
+                "condition": false
+            },
+            "tips": "The 'rm' command is the 'remove' command to remove/delete a file. If this command is successful you will see NO OUTPUT. This is common among many basic Unix tools. The second 'ls' command should show that the file is now gone.",
+            "successMessage":"You have successfully removed the file! The 'pwd' command stands for (P)resent (W)orking (D)irectory, and it shows you the folder/directory that you are currently \"in\". Directories are like little rooms that can contain files and doors to other directories. On the Command Line, you can only be in one directory at a time (unless you have multiple terminal windows open).",
+            "retryMessage":"Hmmm... looks like the file is still there. Double check your command and check for typos. Remember that Unix filenames are usually case sensitive, so that must match as well."
         }
     ],
     "flags": [2024],

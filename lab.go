@@ -103,3 +103,12 @@ func (l *Lab) CheckFlag(flagNum int) bool {
 	}
 	return false
 }
+
+func (l *Lab) CheckBonusFlag(flagNum int) bool {
+	for _, flag := range l.BonusFlags {
+		if flag == flagNum {
+			return true
+		}
+	}
+	return false
+}
