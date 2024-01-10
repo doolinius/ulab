@@ -10,14 +10,17 @@ import (
 )
 
 type LabResult struct {
-	Number         string   `json:"number"`
-	SubmissionCode string   `json:"submissionCode"`
-	StartTime      string   `json:"startTime"`
-	FinishTime     string   `json:"finishTime"`
-	Status         string   `json:"status"`
-	Steps          []string `json:"steps"`
-	Flags          []int    `json:"flags"`
-	BonusFlags     []int    `json:"bonusFlags"`
+	Number          string   `json:"number"`
+	SubmissionCode  string   `json:"submissionCode"`
+	StartTime       string   `json:"startTime"`
+	FinishTime      string   `json:"finishTime"`
+	Status          string   `json:"status"`
+	Steps           []string `json:"steps"`
+	TotalSteps      int      `json:"totalSteps"`
+	Flags           []int    `json:"flags"`
+	TotalFlags      int      `json:"totalFlags"`
+	BonusFlags      []int    `json:"bonusFlags"`
+	TotalBonusFlags int      `json:"totalBonusFlags"`
 }
 
 type Status struct {
@@ -27,36 +30,30 @@ type Status struct {
 	Results     map[string]*LabResult `json:"results"`
 }
 
-func (lr *LabResult) init() {
-	var flagSlice []int
-	var stepSlice []string
-	for _, f := range lr.Flags {
-		flagSlice = append(flagSlice, f)
-	}
-	for _, s := range lr.Steps {
-		stepSlice = append(stepSlice, s)
-	}
-	lr.Flags = flagSlice
-	lr.Steps = stepSlice
+func (lr *LabResult) QuickScore() {
+	fmt.Printf("%s Score: %d/%d", lr.Number, lr.Score(), lr.TotalScore())
 }
 
-func (s *Status) init() {
-	var resultsSlice []LabResult
-	for _, lr := range s.Results {
-		lr.init()
-		resultsSlice = append(resultsSlice, *lr)
-	}
+func (lr *LabResult) TotalScore() int {
+	return lr.TotalSteps + lr.TotalFlags
+}
+
+func (lr *LabResult) Score() int {
+	numSteps, _ := lr.StepStatus()
+	score := numSteps + len(lr.Flags) + len(lr.BonusFlags)
+	return score
 }
 
 func (s *Status) FlagStatus(l *Lab) (int, int) {
-	result := s.getResults(s.CurrentLab)
+	result := s.GetResults(s.CurrentLab)
 	return len(result.Flags), len(l.Flags)
 }
 
-func (s *Status) StepStatus(l *Lab) (int, int) {
-	result := s.getResults(s.CurrentLab)
+func (lr *LabResult) StepStatus() (int, int) {
+	//result := s.GetResults(s.CurrentLab)
+	l := OpenLabFile(lr.Number)
 	numSteps := 0
-	for _, stepStatus := range result.Steps {
+	for _, stepStatus := range lr.Steps {
 		if stepStatus == "success" {
 			numSteps++
 		}
@@ -66,16 +63,22 @@ func (s *Status) StepStatus(l *Lab) (int, int) {
 
 func (s *Status) ScoreReport(l *Lab) {
 	score := 0
-	result := s.getResults(s.CurrentLab)
+	result := s.GetResults(s.CurrentLab)
 	numFlags := len(result.Flags)
 	numBonusFlags := len(result.BonusFlags)
-	numSteps, numTotalSteps := s.StepStatus(l)
+	numSteps, numTotalSteps := result.StepStatus()
 
 	score = numSteps + numFlags + numBonusFlags
 	fmt.Printf("Steps completed: %d/%d\n", numSteps, numTotalSteps)
-	fmt.Printf(" Flags captured: %d/%d\n", numFlags, len(l.Flags))
-	fmt.Printf("    Bonus Flags: %d/%d\n", numBonusFlags, len(l.BonusFlags))
-	fmt.Printf("    Total Score: %d/%d\n", score, len(l.Steps)+len(l.Flags))
+	fmt.Printf(" Flags captured: %d/%d\n", numFlags, result.TotalFlags)
+	fmt.Printf("    Bonus Flags: %d/%d\n", numBonusFlags, result.TotalBonusFlags)
+	fmt.Printf("    Total Score: %d/%d\n", score, numTotalSteps+result.TotalBonusFlags)
+}
+
+func (s *Status) FullResults() {
+	for _, result := range s.Results {
+		result.QuickScore()
+	}
 }
 
 func (s *Status) submissionCode(time string) string {
@@ -87,7 +90,7 @@ func (s *Status) submissionCode(time string) string {
 }
 
 func (s *Status) Submit(lab *Lab) {
-	result := s.getResults(lab.Number)
+	result := s.GetResults(lab.Number)
 	t := time.Now()
 	result.FinishTime = fmt.Sprintf("%d-%02d-%02dT%02d:%02d",
 		t.Year(), t.Month(), t.Day(),
@@ -108,16 +111,19 @@ func (s *Status) NewLab(lab *Lab) {
 		t.Year(), t.Month(), t.Day(),
 		t.Hour(), t.Minute())
 	newResult.Status = "inProgress"
-	newResult.Steps = make([]string, len(lab.Steps))
+	newResult.TotalSteps = len(lab.Steps)
+	newResult.Steps = make([]string, newResult.TotalSteps)
 	for i := 0; i < len(newResult.Steps); i++ {
 		newResult.Steps[i] = "incomplete"
 	}
 	newResult.Flags = make([]int, 0)
+	newResult.TotalFlags = len(lab.Flags)
 	newResult.BonusFlags = make([]int, 0)
+	newResult.TotalBonusFlags = len(lab.BonusFlags)
 	s.Results[lab.Number] = &newResult
 }
 
-func (s *Status) getResults(labNum string) *LabResult {
+func (s *Status) GetResults(labNum string) *LabResult {
 	_, keyExists := s.Results[labNum]
 	if keyExists {
 		return s.Results[labNum]
@@ -138,7 +144,7 @@ func (s *Status) AddFlag(labNum string, flagNum int, bOpt ...bool) {
 	if len(bOpt) > 1 {
 		bonus = bOpt[0]
 	}
-	result := s.getResults(labNum)
+	result := s.GetResults(labNum)
 	flagList := result.Flags
 	if bonus {
 		flagList = result.BonusFlags
@@ -163,7 +169,7 @@ func (s *Status) InProgress() (string, bool) {
 }
 
 func (s *Status) Complete(labNum string, stepNum int) {
-	result := s.getResults(labNum)
+	result := s.GetResults(labNum)
 	result.Steps[stepNum] = "success"
 	/*
 		for _, result := range s.Results {
@@ -186,11 +192,13 @@ func (s *Status) Save() {
 	//os.WriteFile(s.Username+".json", json, fs.)
 }
 
-func ReadStatusFile(username string, s *Status) {
-	jsonData, err := os.ReadFile(username + ".json")
+func ReadStatusFile(fileName string) *Status {
+	var s Status
+	jsonData, err := os.ReadFile(fileName)
 	if err != nil {
-		fmt.Printf("Could not open user file.")
+		fmt.Printf("Could not open user status file.")
 		os.Exit(1)
 	}
-	json.Unmarshal(jsonData, s)
+	json.Unmarshal(jsonData, &s)
+	return &s
 }

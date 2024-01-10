@@ -2,6 +2,7 @@
     "number": "3-1",
     "name": "First Login",
     "description": "Welcome to the CIT Unix server. In this lab, you will be introduced to the 'lab' program, change your password and a few other basics.",
+    "dataFiles": "",
     "steps": [
         {
             "text": "The first thing you need to do is change your password. Make it something long, but easy to remember.",
@@ -30,14 +31,14 @@
             "retryMessage": "I'm not sure why this would fail."
         },
         {
-            "text":"See your Home Directory and Delete a File",
+            "text":"Your Home Directory and Deleting a File",
             "tasks":["pwd", "ls", "rm delete_me.txt", "ls"],
             "test": {
                 "testType": "command",
                 "command": "ls delete_me.txt",
                 "condition": false
             },
-            "tips": "The 'rm' command is the 'remove' command to remove/delete a file. If this command is successful you will see NO OUTPUT. This is common among many basic Unix tools. The second 'ls' command should show that the file is now gone.",
+            "tips": "'pwd' shows you your present working directory. In this case it will be the name of your 'home directory'. The 'rm' command is the 'remove' command to remove/delete a file. If this command is successful you will see NO OUTPUT. This is common among many basic Unix tools. The second 'ls' command should show that the file is now gone.",
             "successMessage":"You have successfully removed the file! The 'pwd' command stands for (P)resent (W)orking (D)irectory, and it shows you the folder/directory that you are currently \"in\". Directories are like little rooms that can contain files and doors to other directories. On the Command Line, you can only be in one directory at a time (unless you have multiple terminal windows open).",
             "retryMessage":"Hmmm... looks like the file is still there. Double check your command and check for typos. Remember that Unix filenames are usually case sensitive, so that must match as well."
         }

@@ -1,6 +1,7 @@
 package ulab
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -25,19 +26,20 @@ type Lab struct {
 	Number      string `json:"number"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
+	Datafiles   string `json:"dataFiles"`
 	Steps       []Step `json:"steps"`
 	Flags       []int  `json:"flags"`
 	BonusFlags  []int  `json:"bonusFlags"`
 }
 
 func (l *Lab) PrintSteps(s *Status) {
-	results := s.getResults(l.Number)
+	results := s.GetResults(l.Number)
 	fmt.Printf("Lab %s Steps\n\n", l.Number)
 	fmt.Printf("   Flags: %d	Bonus Flags: %d\n", len(l.Flags), len(l.BonusFlags))
 	fmt.Printf("   Steps:\n")
 	for i, step := range l.Steps {
 		stepStatus := "incomplete"
-		if len(results.Steps) < i {
+		if i < len(results.Steps) {
 			stepStatus = results.Steps[i]
 		}
 		fmt.Printf("      %d. %s (%s)\n", i+1, step.Text, stepStatus)
@@ -84,7 +86,7 @@ func (l *Lab) PrintStep(stepNum int) {
 }
 
 func (s *Step) PrintTasks(stepNum int) {
-	fmt.Printf("Step %d: %s\n\n", stepNum, s.Text)
+	fmt.Printf("Step %d: %s\n\n", stepNum+1, s.Text)
 	fmt.Println("Perform the following tasks/commands:")
 	for _, task := range s.Tasks {
 		fmt.Printf("\t%s\n", task)
@@ -111,4 +113,19 @@ func (l *Lab) CheckBonusFlag(flagNum int) bool {
 		}
 	}
 	return false
+}
+
+func OpenLabFile(labNum string) *Lab {
+	filepath := ULConfig.Root + "/labs/" + labNum + "/lab.json"
+	fmt.Printf("Opening lab file %s\n", filepath)
+	labJson, err := os.ReadFile(filepath)
+	if err != nil {
+		fmt.Printf("Could not read data file for Lab %s: ", labNum)
+		os.Exit(1)
+		return nil
+	} else {
+		lab := Lab{}
+		json.Unmarshal(labJson, &lab)
+		return &lab
+	}
 }
