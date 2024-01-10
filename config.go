@@ -12,6 +12,12 @@ type Config struct {
 	Data string `json:"data"`
 }
 
+var ULConfig Config
+
+func init() {
+	ULConfig = *ReadConfigFile()
+}
+
 func ReadConfigFile() *Config {
 	var filename string
 	switch runtime.GOOS {
