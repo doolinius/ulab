@@ -187,7 +187,7 @@ func (s *Status) Save() {
 		fmt.Printf("Error Marshaling Status Data")
 		os.Exit(1)
 	}
-	f, err := os.Create(s.Username + ".json")
+	f, err := os.Create(ULConfig.Data + "/" + s.Username + ".json")
 	f.Write(json)
 	//os.WriteFile(s.Username+".json", json, fs.)
 }

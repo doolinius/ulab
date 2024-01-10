@@ -19,7 +19,7 @@ func main() {
 		fmt.Printf("User information not found.\n")
 		os.Exit(1)
 	}
-	fmt.Println("Data File: ", ulab.ULConfig.Data+"/"+user.Username+".json")
+	//fmt.Println("Data File: ", ulab.ULConfig.Data+"/"+user.Username+".json")
 	userStatus := ulab.ReadStatusFile(ulab.ULConfig.Data + "/" + user.Username + ".json")
 	//userStatus.init()
 
@@ -132,6 +132,7 @@ func labCheck(s *ulab.Status) {
 
 func labNext(l *ulab.Lab, s *ulab.Status) {
 	s.CurrentStep++
+	s.Save()
 	step := l.Steps[s.CurrentStep]
 	step.PrintTasks(s.CurrentStep)
 }
@@ -139,17 +140,17 @@ func labNext(l *ulab.Lab, s *ulab.Status) {
 func printUsage() {
 	out := `Usage: lab <subcommand> <argument>
 
-	Available subcommands:
-		start <lab id> Begins a new lab (there can be only one active lab)
-		steps          Lists the steps of the current lab
-		current        Shows the details of the current step in the lab
-		check          Checks the success of the current step in a lab
-		next           Moves to the next step in the lab
-		status         Shows your current progress in the lab
-		flag <flag #>  Captures a numeric flag discovered in the lab
-		submit         Submits the lab for grading
-		help           Show this usage screen
-	`
+Available subcommands:
+    start <lab id> Begins a new lab (there can be only one active lab)
+    steps          Lists the steps of the current lab
+    current        Shows the details of the current step in the lab
+    check          Checks the success of the current step in a lab
+    next           Moves to the next step in the lab
+    status         Shows your current progress in the lab
+    flag <flag #>  Captures a numeric flag discovered in the lab
+    submit         Submits the lab for grading
+    help           Show this usage screen
+`
 	fmt.Println(out)
 }
 
@@ -235,7 +236,7 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 
 	// Get first step
 	firstStep := lab.Steps[0]
-	firstStep.PrintTasks(1)
+	firstStep.PrintTasks(0)
 
 }
 

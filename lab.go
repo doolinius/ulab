@@ -117,7 +117,7 @@ func (l *Lab) CheckBonusFlag(flagNum int) bool {
 
 func OpenLabFile(labNum string) *Lab {
 	filepath := ULConfig.Root + "/labs/" + labNum + "/lab.json"
-	fmt.Printf("Opening lab file %s\n", filepath)
+	//fmt.Printf("Opening lab file %s\n", filepath)
 	labJson, err := os.ReadFile(filepath)
 	if err != nil {
 		fmt.Printf("Could not read data file for Lab %s: ", labNum)
