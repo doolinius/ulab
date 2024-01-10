@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/user"
@@ -12,14 +11,16 @@ import (
 )
 
 func main() {
+
 	// Get user info and current lab status
-	var userStatus ulab.Status
+	//var userStatus ulab.Status
 	user, err := user.Current()
 	if err != nil {
 		fmt.Printf("User information not found.\n")
 		os.Exit(1)
 	}
-	ulab.ReadStatusFile(user.Username, &userStatus)
+	fmt.Println("Data File: ", ulab.ULConfig.Data+"/"+user.Username+".json")
+	userStatus := ulab.ReadStatusFile(ulab.ULConfig.Data + "/" + user.Username + ".json")
 	//userStatus.init()
 
 	// Check for subcommand
@@ -35,7 +36,7 @@ func main() {
 			printUsage()
 		} else {
 			//fmt.Printf("Starting Lab %s\n", os.Args[2])
-			labStart(os.Args[2], user, &userStatus)
+			labStart(os.Args[2], user, userStatus)
 		}
 	case "steps":
 		// TODO: necessary checks
@@ -44,8 +45,8 @@ func main() {
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
 		}
-		lab := openLabFile(userStatus.CurrentLab)
-		lab.PrintSteps(&userStatus)
+		lab := ulab.OpenLabFile(userStatus.CurrentLab)
+		lab.PrintSteps(userStatus)
 	case "current":
 		// TODO: necessary checks
 		if userStatus.CurrentLab == "" {
@@ -53,7 +54,7 @@ func main() {
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
 		}
-		lab := openLabFile(userStatus.CurrentLab)
+		lab := ulab.OpenLabFile(userStatus.CurrentLab)
 		lab.PrintStep(userStatus.CurrentStep)
 	case "check":
 		// TODO: necessary checks
@@ -63,7 +64,7 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Printf("Checking current step...\n")
-		labCheck(&userStatus)
+		labCheck(userStatus)
 	case "next":
 		// do necessary checks
 		if userStatus.CurrentLab == "" {
@@ -71,8 +72,8 @@ func main() {
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
 		}
-		lab := openLabFile(userStatus.CurrentLab)
-		labNext(lab, &userStatus)
+		lab := ulab.OpenLabFile(userStatus.CurrentLab)
+		labNext(lab, userStatus)
 	case "flag":
 		// TODO: Check arg numbers
 		// TODO: necessary checks
@@ -89,7 +90,7 @@ func main() {
 			if err != nil {
 				fmt.Printf("Flag must be a valid number")
 			}
-			lab := openLabFile(userStatus.CurrentLab)
+			lab := ulab.OpenLabFile(userStatus.CurrentLab)
 			if lab.CheckFlag(flagNum) {
 				fmt.Printf("SUCCESS! You've captured Lab %s Flag %d\n", lab.Number, flagNum)
 				userStatus.AddFlag(lab.Number, flagNum)
@@ -107,8 +108,8 @@ func main() {
 			fmt.Printf("\n\tlab start <lab number>\n\n")
 			os.Exit(1)
 		}
-		lab := openLabFile(userStatus.CurrentLab)
-		labSubmit(&userStatus, lab)
+		lab := ulab.OpenLabFile(userStatus.CurrentLab)
+		labSubmit(userStatus, lab)
 	case "help":
 		printUsage()
 	default:
@@ -118,7 +119,7 @@ func main() {
 }
 
 func labCheck(s *ulab.Status) {
-	l := openLabFile(s.CurrentLab)
+	l := ulab.OpenLabFile(s.CurrentLab)
 	// check status of current step
 	if l.Check(s.CurrentStep) {
 		s.Complete(l.Number, s.CurrentStep)
@@ -156,14 +157,16 @@ func labSubmit(s *ulab.Status, l *ulab.Lab) {
 	// check for unfinished steps
 	// print those
 	done := true // if there any unfinished steps, or uncaptured flags
-	success, stepsTotal := s.StepStatus(l)
+	result := s.GetResults(l.Number)
+	success, stepsTotal := result.StepStatus()
 	if success == stepsTotal {
 		fmt.Printf("Great job, you've finished all of the steps for this lab!\n")
 	} else {
 		fmt.Printf("You have %d steps left to complete.\n", stepsTotal-success)
 		done = false
 	}
-	flagsCaptured, flagsTotal := s.StepStatus(l)
+	flagsCaptured := len(result.Flags)
+	flagsTotal := result.TotalFlags
 	if flagsCaptured == flagsTotal {
 		fmt.Printf("Nicely done, you've finished all of the steps for this lab!\n")
 	} else {
@@ -204,7 +207,7 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 		submitPrompt := fmt.Sprintf("Would you like to submit Lab %s before starting the new one?", curLabNum)
 		answer = yesOrNo(submitPrompt)
 		if answer == "yes" {
-			lab := openLabFile(curLabNum)
+			lab := ulab.OpenLabFile(curLabNum)
 			labSubmit(s, lab)
 		} else {
 			os.Exit(1)
@@ -214,7 +217,7 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 	// Go on with starting lab
 	// Open lab file
 
-	lab := openLabFile(labNum)
+	lab := ulab.OpenLabFile(labNum)
 
 	// Mark first step as in-progress for user
 	s.CurrentLab = lab.Number
@@ -234,19 +237,6 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 	firstStep := lab.Steps[0]
 	firstStep.PrintTasks(1)
 
-}
-
-func openLabFile(labNum string) *ulab.Lab {
-	labJson, err := os.ReadFile(labNum + ".json")
-	if err != nil {
-		fmt.Printf("Could not read data file for Lab %s: ", labNum)
-		os.Exit(1)
-		return nil
-	} else {
-		lab := ulab.Lab{}
-		json.Unmarshal(labJson, &lab)
-		return &lab
-	}
 }
 
 func printLabStatus(s *ulab.Status) {
