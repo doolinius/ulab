@@ -10,8 +10,6 @@ import (
 
 func main() {
 
-	c := ulab.ReadConfigFile()
-
 	if len(os.Args) < 2 || len(os.Args) > 3 {
 		printUsage()
 		os.Exit(1)
@@ -26,21 +24,25 @@ func main() {
 	switch os.Args[1] {
 	case "-n":
 		fmt.Printf("Lab Number: %s\n", *labNumArg)
-		files, err := os.ReadDir(c.Data)
+		files, err := os.ReadDir(ulab.ULConfig.Data)
 		check(err)
 		// for each file:
 		for _, entry := range files {
-			fullPath := c.Data + "/" + entry.Name()
-			fmt.Printf("  %s\n", fullPath)
+			fullPath := ulab.ULConfig.Data + "/" + entry.Name()
+			//fmt.Printf("  %s\n", fullPath)
 			userstatus := ulab.ReadStatusFile(fullPath)
-			userstatus.FullResults()
+			userstatus.QuickScore(*labNumArg)
 		}
 		//		open file
 		//		print score for student
 	case "-u":
 		fmt.Printf("Username: %s\n", *usernameArg)
 		// open student file
+		fullPath := ulab.ULConfig.Data + "/" + *usernameArg + ".json"
+		//fmt.Printf("  %s\n", fullPath)
+		userstatus := ulab.ReadStatusFile(fullPath)
 		// print report
+		userstatus.FullResults()
 	case "-s":
 		fmt.Printf("Submission Code: %s\n", *submissionArg)
 		//

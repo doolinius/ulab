@@ -30,23 +30,20 @@ type Status struct {
 	Results     map[string]*LabResult `json:"results"`
 }
 
-func (lr *LabResult) QuickScore() {
-	fmt.Printf("%s Score: %d/%d", lr.Number, lr.Score(), lr.TotalScore())
+func (s *Status) QuickScore(labNum string) {
+	lr := s.GetResults(labNum)
+	score, totalScore := lr.Score()
+	fmt.Printf("%s: %d/%d\n", s.Username, score, totalScore)
 }
 
 func (lr *LabResult) TotalScore() int {
 	return lr.TotalSteps + lr.TotalFlags
 }
 
-func (lr *LabResult) Score() int {
+func (lr *LabResult) Score() (int, int) {
 	numSteps, _ := lr.StepStatus()
 	score := numSteps + len(lr.Flags) + len(lr.BonusFlags)
-	return score
-}
-
-func (s *Status) FlagStatus(l *Lab) (int, int) {
-	result := s.GetResults(s.CurrentLab)
-	return len(result.Flags), len(l.Flags)
+	return score, lr.TotalScore()
 }
 
 func (lr *LabResult) StepStatus() (int, int) {
@@ -77,7 +74,8 @@ func (s *Status) ScoreReport(l *Lab) {
 
 func (s *Status) FullResults() {
 	for _, result := range s.Results {
-		result.QuickScore()
+		score, total := result.Score()
+		fmt.Printf("    %s: %d/%d\n", result.Number, score, total)
 	}
 }
 
@@ -158,6 +156,11 @@ func (s *Status) AddFlag(labNum string, flagNum int, bOpt ...bool) {
 	//fmt.Printf("Result Flags: %v\n", result.Flags)
 	//fmt.Printf("Result Flags: %v\n", s.Results[1].Flags)
 	s.Save()
+}
+
+func (s *Status) FlagStatus(l *Lab) (int, int) {
+	result := s.GetResults(s.CurrentLab)
+	return len(result.Flags), len(l.Flags)
 }
 
 func (s *Status) InProgress() (string, bool) {
