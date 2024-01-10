@@ -26,10 +26,22 @@ type Lab struct {
 	Number      string `json:"number"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Datafiles   string `json:"dataFiles"`
+	Datafiles   bool   `json:"dataFiles"`
 	Steps       []Step `json:"steps"`
 	Flags       []int  `json:"flags"`
 	BonusFlags  []int  `json:"bonusFlags"`
+}
+
+func (l *Lab) extract() {
+	if !l.Datafiles {
+		fmt.Printf("No data files are required for this lab.")
+	} else {
+		datafilePath := ULConfig.Root + "/labs/" + l.Number + "/data.zip"
+		_, err := exec.Command("unzip", datafilePath).Output()
+		if err != nil {
+			fmt.Printf("Error extracting data files: %v\n", err)
+		}
+	}
 }
 
 func (l *Lab) PrintSteps(s *Status) {
