@@ -199,7 +199,7 @@ func ReadStatusFile(fileName string) *Status {
 	var s Status
 	jsonData, err := os.ReadFile(fileName)
 	if err != nil {
-		fmt.Printf("Could not open user status file.")
+		fmt.Printf("Could not open user status file: %v\n", err)
 		os.Exit(1)
 	}
 	json.Unmarshal(jsonData, &s)

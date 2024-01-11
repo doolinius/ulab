@@ -1,4 +1,4 @@
 {
     "root": "/opt/ulab",
-    "data": "/var/ulab"
+    "data": "/opt/ulab/data"
 }
