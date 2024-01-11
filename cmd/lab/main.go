@@ -220,6 +220,9 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 
 	lab := ulab.OpenLabFile(labNum)
 
+	// check for data files and extract if necessary
+	lab.Extract()
+
 	// Mark first step as in-progress for user
 	s.CurrentLab = lab.Number
 	s.CurrentStep = 0

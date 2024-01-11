@@ -32,12 +32,13 @@ type Lab struct {
 	BonusFlags  []int  `json:"bonusFlags"`
 }
 
-func (l *Lab) extract() {
+func (l *Lab) Extract() {
 	if !l.Datafiles {
 		fmt.Printf("No data files are required for this lab.")
 	} else {
+		fmt.Printf("Extracting data files...")
 		datafilePath := ULConfig.Root + "/labs/" + l.Number + "/data.zip"
-		_, err := exec.Command("unzip", datafilePath).Output()
+		_, err := exec.Command("sh", "-c", "unzip", datafilePath).Output()
 		if err != nil {
 			fmt.Printf("Error extracting data files: %v\n", err)
 		}
@@ -63,7 +64,9 @@ func (l *Lab) Check(step int) bool {
 	switch test.TestType {
 	case "script":
 		// execute check command
-		_, err := exec.Command("sh", test.Command).Output()
+		cmdPath := ULConfig.Root + "/labs/" + l.Number + "/scripts/" + test.Command
+		fmt.Printf("Running script %s...\n", cmdPath)
+		_, err := exec.Command("sh", cmdPath).Output()
 		// fun new switch statement
 		switch {
 		case (err != nil && test.Condition == true), (err == nil && test.Condition == false):
@@ -76,7 +79,18 @@ func (l *Lab) Check(step int) bool {
 		}
 	case "command":
 		// execute check command
+		fmt.Printf("Running command %s...\n", test.Command)
 		_, err := exec.Command("sh", "-c", test.Command).Output()
+		switch {
+		case (err != nil && test.Condition == true), (err == nil && test.Condition == false):
+			fmt.Printf("%v\n", err)
+			fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
+			return false
+		case (err == nil && test.Condition == true), (err != nil && test.Condition == false):
+			fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
+			return true
+		}
+		/*
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
@@ -85,6 +99,7 @@ func (l *Lab) Check(step int) bool {
 			fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
 			return true
 		}
+		*/
 	default:
 		fmt.Printf("Not a recognized test type.")
 		os.Exit(1)

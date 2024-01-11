@@ -2,7 +2,7 @@
     "number": "3-1",
     "name": "First Login",
     "description": "Welcome to the CIT Unix server. In this lab, you will be introduced to the 'lab' program, change your password and a few other basics.",
-    "dataFiles": "",
+    "dataFiles": true,
     "steps": [
         {
             "text": "The first thing you need to do is change your password. Make it something long, but easy to remember.",
@@ -11,8 +11,8 @@
             ],
             "tips": "The 'passwd' command does NOT show your password as you type it, not even with asterisks. It may seem like it's not accepting input, but it is. This is done for security reasons, so that any nosy person looking over your shoulder cannot even see how long your password is.",
             "test": {
-                "testType": "command",
-                "command": "true",
+                "testType": "script",
+                "command": "passwd.sh",
                 "condition": true
             },
             "successMessage": "Excellent! Remember that this is NOT the same as your WVNCC student password. Make sure not to forget your password. It might even be a good time to start using a password manager!",
