@@ -36,9 +36,10 @@ func (l *Lab) Extract() {
 	if !l.Datafiles {
 		fmt.Printf("No data files are required for this lab.")
 	} else {
+		fmt.Printf("\nThis lab requires data files.\n")
 		fmt.Printf("Extracting data files...")
 		datafilePath := ULConfig.Root + "/labs/" + l.Number + "/data.zip"
-		_, err := exec.Command("sh", "-c", "unzip", datafilePath).Output()
+		out, err := exec.Command("/usr/bin/unzip", datafilePath).Output()
 		if err != nil {
 			fmt.Printf("Error extracting data files: %v\n", err)
 		}
