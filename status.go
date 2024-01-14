@@ -148,16 +148,16 @@ func (s *Status) AddFlag(labNum string, flagNum int, bOpt ...bool) {
 		bonus = bOpt[0]
 	}
 	result := s.GetResults(labNum)
-	flagList := result.Flags
+	flagList := &result.Flags
 	if bonus {
-		flagList = result.BonusFlags
+		flagList = &result.BonusFlags
 	}
 	//fmt.Printf("Result: %v  Flagnum: %d\n", result, flagNum)
-	if slices.Contains(flagList, flagNum) {
+	if slices.Contains(*flagList, flagNum) {
 		fmt.Printf("Flag %d has already been captured\n", flagNum)
 		return
 	}
-	result.Flags = append(result.Flags, flagNum)
+	result.Flags = append(*flagList, flagNum)
 	//fmt.Printf("Result Flags: %v\n", result.Flags)
 	//fmt.Printf("Result Flags: %v\n", s.Results[1].Flags)
 	s.Save()
