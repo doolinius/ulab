@@ -123,7 +123,7 @@ func labCheck(s *ulab.Status) {
 	// check status of current step
 	if l.Check(s.CurrentStep) {
 		s.Complete(l.Number, s.CurrentStep)
-		answer := yesOrNo("Would you like to move on to the next step?")
+		answer := yesOrNo("\n\nWould you like to move on to the next step?")
 		if answer == "yes" {
 			labNext(l, s)
 		}

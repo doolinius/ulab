@@ -23,13 +23,14 @@ type Step struct {
 }
 
 type Lab struct {
-	Number      string `json:"number"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Datafiles   bool   `json:"dataFiles"`
-	Steps       []Step `json:"steps"`
-	Flags       []int  `json:"flags"`
-	BonusFlags  []int  `json:"bonusFlags"`
+	Number        string `json:"number"`
+	Name          string `json:"name"`
+	Description   string `json:"description"`
+	Datafiles     bool   `json:"dataFiles"`
+	Steps         []Step `json:"steps"`
+	SubmitMessage string `json:"submitMessage"`
+	Flags         []int  `json:"flags"`
+	BonusFlags    []int  `json:"bonusFlags"`
 }
 
 func (l *Lab) Extract() {
@@ -39,7 +40,7 @@ func (l *Lab) Extract() {
 		fmt.Printf("\nThis lab requires data files.\n")
 		fmt.Printf("Extracting data files...")
 		datafilePath := ULConfig.Root + "/labs/" + l.Number + "/data.zip"
-		out, err := exec.Command("/usr/bin/unzip", datafilePath).Output()
+		_, err := exec.Command("/usr/bin/unzip", datafilePath).Output()
 		if err != nil {
 			fmt.Printf("Error extracting data files: %v\n", err)
 		}
@@ -92,14 +93,14 @@ func (l *Lab) Check(step int) bool {
 			return true
 		}
 		/*
-		if err != nil {
-			fmt.Printf("%v\n", err)
-			fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
-			return false
-		} else {
-			fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
-			return true
-		}
+			if err != nil {
+				fmt.Printf("%v\n", err)
+				fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
+				return false
+			} else {
+				fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
+				return true
+			}
 		*/
 	default:
 		fmt.Printf("Not a recognized test type.")
