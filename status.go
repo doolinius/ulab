@@ -178,6 +178,7 @@ func (s *Status) InProgress() (string, bool) {
 
 func (s *Status) Complete(labNum string, stepNum int) {
 	result := s.GetResults(labNum)
+	fmt.Printf("Lab %s Step %d, setting to \"success\"\n", labNum, stepNum)
 	result.Steps[stepNum] = "success"
 	/*
 		for _, result := range s.Results {
