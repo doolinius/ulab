@@ -48,14 +48,19 @@ func (lr *LabResult) Score() (int, int) {
 
 func (lr *LabResult) StepStatus() (int, int) {
 	//result := s.GetResults(s.CurrentLab)
-	l := OpenLabFile(lr.Number)
+	//l := OpenLabFile(lr.Number)
 	numSteps := 0
 	for _, stepStatus := range lr.Steps {
 		if stepStatus == "success" {
 			numSteps++
 		}
 	}
-	return numSteps, len(l.Steps)
+	return numSteps, lr.TotalSteps
+}
+
+func (s *Status) StepsCompleted(labNum string) bool {
+	numSteps, totalSteps := s.Results[labNum].StepStatus()
+	return numSteps == totalSteps
 }
 
 func (s *Status) ScoreReport(l *Lab) {

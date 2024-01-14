@@ -123,9 +123,13 @@ func labCheck(s *ulab.Status) {
 	// check status of current step
 	if l.Check(s.CurrentStep) {
 		s.Complete(l.Number, s.CurrentStep)
-		answer := yesOrNo("\n\nWould you like to move on to the next step?")
-		if answer == "yes" {
-			labNext(l, s)
+		// only prompt to move to the next step if the steps are not
+		// completed
+		if !s.StepsCompleted(l.Number) {
+			answer := yesOrNo("Would you like to move on to the next step?")
+			if answer == "yes" {
+				labNext(l, s)
+			}
 		}
 	}
 }
@@ -169,9 +173,9 @@ func labSubmit(s *ulab.Status, l *ulab.Lab) {
 	flagsCaptured := len(result.Flags)
 	flagsTotal := result.TotalFlags
 	if flagsCaptured == flagsTotal {
-		fmt.Printf("Nicely done, you've finished all of the steps for this lab!\n")
+		fmt.Printf("Nicely done, you've captured all of the flags for this lab!\n")
 	} else {
-		fmt.Printf("You have %d steps left to complete.\n", flagsTotal-flagsCaptured)
+		fmt.Printf("You have %d flags left to capture.\n", flagsTotal-flagsCaptured)
 		done = false
 	}
 	if !done {
@@ -182,6 +186,7 @@ func labSubmit(s *ulab.Status, l *ulab.Lab) {
 		}
 	}
 	s.Submit(l)
+	fmt.Printf("%s\n", l.SubmitMessage)
 	// copy command history file
 }
 
