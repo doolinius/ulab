@@ -64,9 +64,9 @@ func (s *Status) StepsCompleted(labNum string) bool {
 	return numSteps == totalSteps
 }
 
-func (s *Status) ScoreReport(l *Lab) {
+func (s *Status) ScoreReport(labNum string) {
 	score := 0
-	result := s.GetResults(s.CurrentLab)
+	result := s.GetResults(labNum)
 	numFlags := len(result.Flags)
 	numBonusFlags := len(result.BonusFlags)
 	numSteps, numTotalSteps := result.StepStatus()
@@ -111,7 +111,7 @@ func (s *Status) LabComplete(labNum string) bool {
 	result := s.GetResults(labNum)
 	if result != nil {
 		return result.Status == "completed"
-	}else{
+	} else {
 		return false
 	}
 }

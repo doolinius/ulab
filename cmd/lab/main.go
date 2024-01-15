@@ -36,14 +36,14 @@ func main() {
 			printUsage()
 		} else {
 			//fmt.Printf("Starting Lab %s\n", os.Args[2])
-			if userStatus.LabComplete(os.Args[2]){
+			if userStatus.LabComplete(os.Args[2]) {
 				fmt.Printf("This lab has already been submitted.\n")
 				os.Exit(1)
-			}else{
+			} else {
 				labStart(os.Args[2], user, userStatus)
 			}
 		}
-	case "steps":
+	case "status":
 		// TODO: necessary checks
 		if userStatus.CurrentLab == "" {
 			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
@@ -115,6 +115,22 @@ func main() {
 		}
 		lab := ulab.OpenLabFile(userStatus.CurrentLab)
 		labSubmit(userStatus, lab)
+	case "score":
+		if len(os.Args) != 3 {
+			fmt.Printf("A lab number must be supplied when starting a new lab.\n")
+			printUsage()
+		} else {
+			// if the user has completed the lab
+			if userStatus.LabComplete(os.Args[2]) {
+				// show the report
+				fmt.Printf("Score Report for Lab %s\n\n", os.Args[2])
+				userStatus.ScoreReport(os.Args[2])
+			} else {
+				// TODO: Check to see if it is a valid lab at all
+				fmt.Printf("Lab %s has not been submitted yet.\n", os.Args[2])
+				os.Exit(1)
+			}
+		}
 	case "help":
 		printUsage()
 	default:
@@ -152,13 +168,12 @@ func printUsage() {
 
 Available subcommands:
     start <lab id> Begins a new lab (there can be only one active lab)
-    steps          Lists the steps of the current lab
+    status         Lists the steps of current lab, as well as completion status
     current        Shows the details of the current step in the lab
     check          Checks the success of the current step in a lab
-    next           Moves to the next step in the lab
-    status         Shows your current progress in the lab
     flag <flag #>  Captures a numeric flag discovered in the lab
     submit         Submits the lab for grading
+	score <lab id> Show the final score of a submitted lab
     help           Show this usage screen
 `
 	fmt.Println(out)
@@ -191,7 +206,7 @@ func labSubmit(s *ulab.Status, l *ulab.Lab) {
 			os.Exit(1)
 		}
 	}
-	s.ScoreReport(l)
+	s.ScoreReport(l.Number)
 	s.Submit(l)
 	fmt.Printf("%s\n", l.SubmitMessage)
 	// copy command history file

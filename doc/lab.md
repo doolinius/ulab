@@ -3,7 +3,7 @@ title: LAB
 section: 1
 header: User Manual
 footer: lab 1.0.0
-date: January 4, 2024
+date: January 14, 2024
 ---
 # NAME
 lab - A program for conducting CIT labs
@@ -11,7 +11,7 @@ lab - A program for conducting CIT labs
 # SYNOPSIS
 **lab** SUB-COMMAND [*args*]
 
-SUB-COMMAND := {start | check | steps | current | next | flag | submit | help}
+SUB-COMMAND := {start | check | status | current | flag | submit | score | help}
 
 # DESCRIPTION
 **lab** is a CIT lab system, built to guide students through lab assignments, providing feedback and tips, tracking progress and giving students additional experience using the Unix command line. 
@@ -49,14 +49,14 @@ If you capture the 2 bonus flags, your score can be 12 out of 10. Those two poin
 **check**
 : check to see if you have completed the current step properly. If not, you may try again and continue checking until you succeed. Upon success, this command will prompt you to move to the next step if you are ready. 
 
-**next**
-: moves to the next step in the lab. You can use this if you choose "no" when prompted after a successful check. 
-
 **flag** <*flag-number*>
 : captures a flag or bonus flag. This command requires a four digit flag number argument (see EXAMPLES) that will be seen in the output of a command during the lab (regular flags) or while exploring on your own (bonus flags). This can only capture flags that are valid for the active lab. 
 
 **submit**
-: submit the lab for grading. You can submit a lab without completing all of the steps or capturing all regular flags. Your score report will be printed to the screen, along with a unique **submission code** that you will submit to Brightspace to verify that you have completed the lab. 
+: submit the lab for grading. You can submit a lab without completing all of the steps or capturing all regular flags. Your score report will be printed to the screen, along with a unique **submission code** that you will submit to Brightspace to verify that you have completed the lab.
+
+**score**
+: review the score and results of a submitted lab. This will display the number of completed steps, captured flags and bonus flags and total score. 
 
 # EXAMPLES
 **lab start 5-2**
