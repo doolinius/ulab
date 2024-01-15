@@ -69,4 +69,4 @@ If you capture the 2 bonus flags, your score can be 12 out of 10. Those two poin
 Written by Jeremy Doolin <jdoolin@wvncc.edu>.
 
 # BUGS
-Submit bug reports online at: <https://github.com/doolinius/unix-lab/issues>
+Submit bug reports to Jeremy Doolin <jdoolin@wvncc.edu>
