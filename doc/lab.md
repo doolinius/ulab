@@ -55,7 +55,7 @@ If you capture the 2 bonus flags, your score can be 12 out of 10. Those two poin
 **submit**
 : submit the lab for grading. You can submit a lab without completing all of the steps or capturing all regular flags. Your score report will be printed to the screen, along with a unique **submission code** that you will submit to Brightspace to verify that you have completed the lab.
 
-**score**
+**score** <*flag-number*>
 : review the score and results of a submitted lab. This will display the number of completed steps, captured flags and bonus flags and total score. 
 
 # EXAMPLES
