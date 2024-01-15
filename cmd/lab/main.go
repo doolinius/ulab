@@ -148,10 +148,13 @@ func labCheck(s *ulab.Status) {
 		// only prompt to move to the next step if the steps are not
 		// completed
 		if !s.StepsCompleted(l.Number) {
-			answer := yesOrNo("Would you like to move on to the next step?")
-			if answer == "yes" {
-				labNext(l, s)
-			}
+			//answer := yesOrNo("Would you like to move on to the next step?")
+			//if answer == "yes" {
+			fmt.Printf("Let's move on to the next Step!\n\n")
+			labNext(l, s)
+			//}
+		} else {
+			fmt.Printf("  You have completed the steps for this lab. You may now submit it for grading with 'lab submit'\n\n")
 		}
 	}
 }
