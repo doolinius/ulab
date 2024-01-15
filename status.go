@@ -33,7 +33,8 @@ type Status struct {
 func (s *Status) QuickScore(labNum string) {
 	lr := s.GetResults(labNum)
 	score, totalScore := lr.Score()
-	fmt.Printf("%s: %d/%d\n", s.Username, score, totalScore)
+	scoreStr := fmt.Sprintf("%d/%d", score, totalScore)
+	fmt.Printf("%16s: %7s    %s\n", s.Username, scoreStr, lr.SubmissionCode)
 }
 
 func (lr *LabResult) TotalScore() int {
