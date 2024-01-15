@@ -32,9 +32,13 @@ type Status struct {
 
 func (s *Status) QuickScore(labNum string) {
 	lr := s.GetResults(labNum)
-	score, totalScore := lr.Score()
-	scoreStr := fmt.Sprintf("%d/%d", score, totalScore)
-	fmt.Printf("%16s: %7s    %s\n", s.Username, scoreStr, lr.SubmissionCode)
+	if lr != nil {
+		score, totalScore := lr.Score()
+		scoreStr := fmt.Sprintf("%d/%d", score, totalScore)
+		fmt.Printf("%16s: %7s    %s\n", s.Username, scoreStr, lr.SubmissionCode)
+	}else {
+		fmt.Printf("%16s: %7s    %s\n", s.Username, "0", "Not Attempted")
+	}
 }
 
 func (lr *LabResult) TotalScore() int {
