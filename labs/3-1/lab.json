@@ -45,7 +45,7 @@
         },
 	{
 		"text":"Delete another file without being told how",
-		"tasks":"[remove the file 'README.lab']",
+		"tasks":["[remove the file 'README.lab']"],
 		"test":{
 			"testType":"command",
 			"command": "ls README.lab",

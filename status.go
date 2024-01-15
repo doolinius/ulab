@@ -95,14 +95,24 @@ func (s *Status) submissionCode(time string) string {
 func (s *Status) Submit(lab *Lab) {
 	result := s.GetResults(lab.Number)
 	t := time.Now()
+	result.Status = "completed"
 	result.FinishTime = fmt.Sprintf("%d-%02d-%02dT%02d:%02d",
 		t.Year(), t.Month(), t.Day(),
 		t.Hour(), t.Minute())
 	result.SubmissionCode = s.submissionCode(result.FinishTime)
-	fmt.Printf("Submission Code: %s\n", result.SubmissionCode)
+	fmt.Printf("\n\tSubmission Code: %s\n\n", result.SubmissionCode)
 	s.CurrentLab = ""
 	s.CurrentStep = -1
 	s.Save()
+}
+
+func (s *Status) LabComplete(labNum string) bool {
+	result := s.GetResults(labNum)
+	if result != nil {
+		return result.Status == "completed"
+	}else{
+		return false
+	}
 }
 
 func (s *Status) NewLab(lab *Lab) {
@@ -142,24 +152,23 @@ func (s *Status) GetResults(labNum string) *LabResult {
 	return nil
 }
 
-func (s *Status) AddFlag(labNum string, flagNum int, bOpt ...bool) {
-	bonus := false
-	if len(bOpt) > 1 {
-		bonus = bOpt[0]
-	}
+func (s *Status) AddFlag(labNum string, flagNum int) {
 	result := s.GetResults(labNum)
-	flagList := &result.Flags
-	if bonus {
-		flagList = &result.BonusFlags
-	}
-	//fmt.Printf("Result: %v  Flagnum: %d\n", result, flagNum)
-	if slices.Contains(*flagList, flagNum) {
+	if slices.Contains(result.Flags, flagNum) {
 		fmt.Printf("Flag %d has already been captured\n", flagNum)
 		return
 	}
-	result.Flags = append(*flagList, flagNum)
-	//fmt.Printf("Result Flags: %v\n", result.Flags)
-	//fmt.Printf("Result Flags: %v\n", s.Results[1].Flags)
+	result.Flags = append(result.Flags, flagNum)
+	s.Save()
+}
+
+func (s *Status) AddBonusFlag(labNum string, flagNum int) {
+	result := s.GetResults(labNum)
+	if slices.Contains(result.BonusFlags, flagNum) {
+		fmt.Printf("Bonus Flag %d has already been captured\n", flagNum)
+		return
+	}
+	result.BonusFlags = append(result.BonusFlags, flagNum)
 	s.Save()
 }
 
@@ -178,10 +187,10 @@ func (s *Status) InProgress() (string, bool) {
 
 func (s *Status) Complete(labNum string, stepNum int) {
 	result := s.GetResults(labNum)
-	fmt.Printf("%v\n", result.Steps)
-	fmt.Printf("Lab %s Step %d, setting to \"success\"\n", labNum, stepNum)
+	//fmt.Printf("%v\n", result.Steps)
+	//fmt.Printf("Lab %s Step %d, setting to \"success\"\n", labNum, stepNum)
 	result.Steps[stepNum] = "success"
-	fmt.Printf("%v\n", result.Steps)
+	//fmt.Printf("%v\n", result.Steps)
 	/*
 		for _, result := range s.Results {
 			if result.Number == labNum {

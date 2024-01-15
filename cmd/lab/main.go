@@ -36,7 +36,12 @@ func main() {
 			printUsage()
 		} else {
 			//fmt.Printf("Starting Lab %s\n", os.Args[2])
-			labStart(os.Args[2], user, userStatus)
+			if userStatus.LabComplete(os.Args[2]){
+				fmt.Printf("This lab has already been submitted.\n")
+				os.Exit(1)
+			}else{
+				labStart(os.Args[2], user, userStatus)
+			}
 		}
 	case "steps":
 		// TODO: necessary checks
@@ -96,7 +101,7 @@ func main() {
 				userStatus.AddFlag(lab.Number, flagNum)
 			} else if lab.CheckBonusFlag(flagNum) {
 				fmt.Printf("SUCCESS! You've captured Lab %s BONUS Flag %d\n", lab.Number, flagNum)
-				userStatus.AddFlag(lab.Number, flagNum, true)
+				userStatus.AddBonusFlag(lab.Number, flagNum)
 			} else {
 				fmt.Printf("Invalid flag number (%d) for Lab %s!\n", flagNum, lab.Number)
 			}
@@ -123,6 +128,7 @@ func labCheck(s *ulab.Status) {
 	// check status of current step
 	if l.Check(s.CurrentStep) {
 		s.Complete(l.Number, s.CurrentStep)
+		s.Save()
 		// only prompt to move to the next step if the steps are not
 		// completed
 		if !s.StepsCompleted(l.Number) {
@@ -185,6 +191,7 @@ func labSubmit(s *ulab.Status, l *ulab.Lab) {
 			os.Exit(1)
 		}
 	}
+	s.ScoreReport(l)
 	s.Submit(l)
 	fmt.Printf("%s\n", l.SubmitMessage)
 	// copy command history file

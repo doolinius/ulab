@@ -67,7 +67,7 @@ func (l *Lab) Check(step int) bool {
 	case "script":
 		// execute check command
 		cmdPath := ULConfig.Root + "/labs/" + l.Number + "/scripts/" + test.Command
-		fmt.Printf("Running script %s...\n", cmdPath)
+		//fmt.Printf("Running script %s...\n", cmdPath)
 		_, err := exec.Command("sh", cmdPath).Output()
 		// fun new switch statement
 		switch {
@@ -81,7 +81,7 @@ func (l *Lab) Check(step int) bool {
 		}
 	case "command":
 		// execute check command
-		fmt.Printf("Running command %s...\n", test.Command)
+		//fmt.Printf("Running command %s...\n", test.Command)
 		_, err := exec.Command("sh", "-c", test.Command).Output()
 		switch {
 		case (err != nil && test.Condition == true), (err == nil && test.Condition == false):
