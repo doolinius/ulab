@@ -25,6 +25,7 @@ type LabResult struct {
 
 type Status struct {
 	Username    string                `json:"username"`
+	Fullname    string                `json:"fullName"`
 	CurrentLab  string                `json:"currentLab"`
 	CurrentStep int                   `json:"currentStep"`
 	Results     map[string]*LabResult `json:"results"`
@@ -35,9 +36,9 @@ func (s *Status) QuickScore(labNum string) {
 	if lr != nil {
 		score, totalScore := lr.Score()
 		scoreStr := fmt.Sprintf("%d/%d", score, totalScore)
-		fmt.Printf("%16s: %7s    %s\n", s.Username, scoreStr, lr.SubmissionCode)
-	}else {
-		fmt.Printf("%16s: %7s    %s\n", s.Username, "0", "Not Attempted")
+		fmt.Printf("%16s: %7s    %s\n", s.Fullname, scoreStr, lr.SubmissionCode)
+	} else {
+		fmt.Printf("%16s: %7s    %s\n", s.Fullname, "0", "Not Attempted")
 	}
 }
 
