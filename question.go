@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+/*
+The Question object. Uses the same object for different types of questions.
+*/
 type Question struct {
 	Type     string   `json:"type"`
 	Text     string   `json:"text"`
@@ -27,6 +30,7 @@ func (q *Question) Ask() {
 	case "TF":
 		fmt.Printf("\ttrue or false?\n\n")
 		answer := getTF()
+		fmt.Printf("%s\n", answer)
 		//q.CheckAnswer(answer)
 	case "MC", "MS", "ORD":
 		for i, option := range q.Options {
@@ -36,7 +40,7 @@ func (q *Question) Ask() {
 	}
 }
 
-func getTF() {
+func getTF() string {
 	var answer string
 	fmt.Printf("	=> ")
 	fmt.Scan(&answer)
@@ -47,9 +51,8 @@ func getTF() {
 		fmt.Scan(&answer)
 		answer = strings.ToLower(answer)
 	}
+	return answer
 }
-
-func Check
 
 func (q *Question) getAnswer() {
 	switch q.Type {
