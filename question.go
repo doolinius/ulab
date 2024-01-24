@@ -29,12 +29,13 @@ func (q *Question) Ask() bool {
 	fmt.Printf("%s\n\n", q.Text)
 	switch q.Type {
 	case "TF":
-		answer := getTF()
-		q.Check(answer)
+		answer = getTF()
+		//q.Check(answer)
 	case "MC":
 		answer = q.getOption()
 	case "MS", "ORD":
 	case "NUM":
+		answer = getInt(999999999)
 	}
 	return q.Check(answer)
 }
@@ -47,8 +48,8 @@ func getTF() int {
 	fmt.Scan(&answer)
 	answer = strings.ToLower(answer)
 	for answer != "true" && answer != "false" {
-		fmt.Printf("Invalid response. Enter 'true' or 'false'")
-		fmt.Printf("	=>  ")
+		fmt.Printf("Invalid response. Enter 'true' or 'false'\n\n")
+		fmt.Printf("	=> ")
 		fmt.Scan(&answer)
 		answer = strings.ToLower(answer)
 	}

@@ -21,6 +21,7 @@ type LabResult struct {
 	TotalFlags      int      `json:"totalFlags"`
 	BonusFlags      []int    `json:"bonusFlags"`
 	TotalBonusFlags int      `json:"totalBonusFlags"`
+	Questions       map[string]string
 }
 
 type Status struct {
@@ -176,6 +177,11 @@ func (s *Status) AddBonusFlag(labNum string, flagNum int) {
 	}
 	result.BonusFlags = append(result.BonusFlags, flagNum)
 	s.Save()
+}
+
+func (s *Status) AddQuestionResult(labNum string, qNum string, qResult string) {
+	result := s.GetResults(labNum)
+	result.Questions[qNum] = qResult
 }
 
 func (s *Status) FlagStatus(l *Lab) (int, int) {

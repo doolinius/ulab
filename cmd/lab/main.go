@@ -146,8 +146,17 @@ func labCheck(s *ulab.Status) {
 		s.Complete(l.Number, s.CurrentStep)
 		s.Save()
 		// If there is a Question to ask
-		if l.Steps[s.CurrentStep].Question.Type != "" {
-			l.Steps[s.CurrentStep].Question.Ask()
+		q := l.Steps[s.CurrentStep].Question
+		if q.Type != "" {
+			qNum := fmt.Sprintf("q%d", s.CurrentStep)
+			if q.Ask() {
+				fmt.Printf("Correct! %s\n", q.Feedback)
+				s.AddQuestionResult(l.Number, qNum, "correct")
+			} else {
+				fmt.Printf("Sorry, that is incorrect.\n")
+				s.AddQuestionResult(l.Number, qNum, "incorrect")
+			}
+			s.Save()
 		}
 		// only prompt to move to the next step if the steps are not
 		// completed
