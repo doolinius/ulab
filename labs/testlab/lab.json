@@ -1,0 +1,203 @@
+{
+    "number": "testlab",
+    "name": "Basic File Management",
+    "description": "In this lab you will get practice using the Unix command line interface to perform basic file management tasks, such as creating and removing directories/folders, moving, copying and renaming files and navigation. While these tasks may feel tedious at first, it does get easer and faster with practice, to a point where it becomes muscle memory and faster that using a graphical interface.",
+    "dataFiles": true,
+    "submitMessage":"",
+    "steps": [
+        {
+            "text": "This lab has extracted a folder of data files in your home directory. You need to change to this directory (remember that 'directory' and 'folder' mean the same thing).",
+            "tasks": [
+                "ls",
+                "cd lab_data"
+            ],
+            "tips": "When you run the 'ls' command, you should see the new folder, 'lab_data', that was created when you started the lab. 'cd' stands for (c)hange (d)irectory, and it will move your present working directory into the new one.",
+            "test": {
+                "testType": "script",
+                "command": "cd.sh",
+                "condition": true
+            },
+            "successMessage": "Very good, you have changed to this new directory. Think of it like moving to a new room, with different files.",
+            "retryMessage": "Hmmm... Looks like you're in the wrong directory. You should start all labs from your home directory. Type 'ls' to make sure the 'lab_data' directory is there. Type 'pwd' to see if you are in your home directory.",
+            "question" : {
+                "type":"NUM",
+                "text":"What year did Wendy and Jeremy start dating?",
+                "options":[],
+                "correct":[2005],
+                "feedback":"That was a very good year."
+            }
+        },
+        {
+            "text":"Ok, let's see what's in this lab_data directory. This time we're going to pass some flags to the 'ls' command so we can get more information.",
+            "tasks": ["ls -l"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "The -l flag tells 'ls' to print a 'long' listing, that includes file details. These details include permissions settings, the user/group that owns the file, the file size, and last modification date.",
+            "successMessage": "Most of these files are empty files with a size of 0 bytes. They are just for practice, so they don't need to have real content. But there are two files that do have content. Take a look at the file size of letter_a.txt. That number is a flag. Capture it!",
+            "retryMessage": "I'm not sure why this would fail."
+        },
+        {
+            "text":"You can also list the files for a directory that you are not in.",
+            "tasks": ["ls -l look_here"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "If you pass the name of a directory to 'ls', it will list the contents of that directory instead of your present working directory, without having to be in it.",
+            "successMessage": "Very good. In time, you'll learn how you can list the contents of any directory on the whole system, no matter which one is your present working directory.",
+            "retryMessage": "I'm not sure why this would fail."
+        },
+        {
+            "text":"Let's organize some of this. There are lots of different file types in here, so let's create some directories for storing them in a more organized way. We'll start with the Word documents.",
+            "tasks": ["mkdir documents"],
+            "test": {
+                "testType": "ls documents",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "The command to create a new directory is 'mkdir', short for 'make directory'. You have to supply the name of the new directory as an argument.",
+            "successMessage": "Good, now it's time to move all of the word documents into this new directory.",
+            "retryMessage": "The 'documents' directory does not seem to be there. Remember that Unix filenames are usually case sensitive, so if you spelled it with a capital D, as in 'Documents', that is incorrect."
+        },
+        {
+            "text":"There are several word documents here, so let's start by moving just one.",
+            "tasks": ["mv english_paper.docx documents"],
+            "test": {
+                "testType": "command",
+                "command": "ls documents/english_paper.docx",
+                "condition": true
+            },
+            "tips": "The command to move files from one directory to another is 'mv'. You have to supply the file or files you wish to move, followed by the destination directory where you want them to be moved to.",
+            "successMessage": "Ok, it looks like the 'english_paper.docx' has been successfully moved to the new directory. Good.",
+            "retryMessage": "The 'english_paper.docx' file does not seem to be in the 'documents' directory. Please check your spelling and try again."
+        },
+        {
+            "text":"It would be tedious to move ALL of the Word documents into that directory one at a time, so let's use a file wildcard to make this faster.",
+            "tasks": ["mv *.docx documents", "ls"],
+            "test": {
+                "testType": "command",
+                "command": "ls *.docx",
+                "condition": false
+            },
+            "tips": "The * character is known as the 'wildcard' character. That is because it means 'any text'. In this example, it means 'any text, followed by .docx'. This is useful for referring to many files of the same type, such as in this example.",
+            "successMessage": "It looks like all of the .docx files have been moved, good job.",
+            "retryMessage": "There are still .docx files in your present working directory. You may want to double check your command syntax, such as making sure there are spaces between 'ls' and '*.docx'."
+        },
+        {
+            "text":"Let's do the same thing with the Excel files.",
+            "tasks": [
+                "[create a directory called 'spreadsheets']",
+                "[move all of the .xlsx files to the 'spreadsheets' directory]",
+                "ls"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "ls spreadsheets && ls spreadsheets/*.xlsx",
+                "condition": true
+            },
+            "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps if you like.",
+            "successMessage": "Good, the organization is getting better.",
+            "retryMessage": "Something went wrong. Either the 'spreadsheets' directory is not there, is named incorrectly, or the .xlsx files have not been moved into it."
+        },
+        {
+            "text":"And lastly, let's take care of the photos.",
+            "tasks": [
+                "[create a directory called 'photos']",
+                "[move all of the .jpg files to the 'photos' directory]",
+                "ls"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "ls photos && ls photos/*.jpg",
+                "condition": true
+            },
+            "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps if you like.",
+            "successMessage": "Much better. We've cleaned up this directory by organizing files into sub-directories for different file types.",
+            "retryMessage": "Something went wrong. Either the 'photos' directory is not there, is named incorrectly, or the .jpg files have not been moved into it."
+        },
+        {
+            "text":"Now, let's rename a file.",
+            "tasks": [
+                "mv letter_a.txt repeating_a.txt",
+                "ls"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "ls repeating_a.txt",
+                "condition": true
+            },
+            "tips": "The 'mv' command is also the command for renaming files. In this case, you must supply the 'mv' command with the current filename followed by the new filename.",
+            "successMessage": "Nice work. You can also rename a file while moving it to a new directory. Just supply the new filename along with the destination directory. For example: mv photo16.jpg photos/mycat.jpg.",
+            "retryMessage": "The new file 'repeating_a.txt' does not exist. Double check your spelling, especially if you accidentally renamed it to the wrong name."
+        },
+        {
+            "text":"Let's check for hidden files.",
+            "tasks": [
+                "ls -a"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "Any files whose names begin with a dot (.) are not listed by default when you run 'ls'. These are called 'dotfiles'. They aren't used for actually hiding data, but they are usually configuration or settings files that you probably don't need to see all of the time. Try 'ls -a' in your home directory after submitting this lab and you'll see some config files.",
+            "successMessage": "Hmm... notice anything about that hidden filename?",
+            "retryMessage": ""
+        },
+        {
+            "text":"Now, let's try unzipping a file.",
+            "tasks": [
+                "unzip example.zip",
+                "ls -l"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "ls whats_this.txt",
+                "condition": true
+            },
+            "tips": "Zip files are a common file compression format across many operating systems. It is a way of collecting multiple files into a single file, and/or to compress files so that it uses less storage space. The 'unzip' command requires that you supply the name of the zip file that you want to extract. It will then show you the files that it created.",
+            "successMessage": "Extracting compressed and archived files is a common task in any system. We'll be looking at more file formats that are more commonly used on Unix systems in a future lab.",
+            "retryMessage": "Unzipping this file should have resulted in a new file being created, but I don't see it."
+        },
+        {
+            "text":"It's time to create copies of a file.",
+            "tasks": [
+                "cp info.zip info_copy.zip",
+                "mkdir backup",
+                "cp info.zip repeating_a.txt backup",
+                "ls -l backup"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "ls backup/info.zip && ls backup/repeating_a.txt",
+                "condition": true
+            },
+            "tips": "The 'cp' command requires source files and a destination directory. In the first example, you will create a copy of the 'info.zip' file in this directory, so it has to have a new name. In the second example, you will create copies of two files in the 'backup' directory.",
+            "successMessage": "Nice job. You have created copies of files in two different ways. 'cp' can be used in many ways. Practice using it to become familiar with them.",
+            "retryMessage": "Something isn't right here. Either the directory was not created, or the files were not copied to it."
+        },
+        {
+            "text":"To finish this lab, we'll go back to your home directory and remove the files that were extracted for this lab.",
+            "tasks": [
+                "cd",
+                "rmdir lab_data",
+                "rm -rf lab_data",
+                "ls"
+            ],
+            "test": {
+                "testType": "script",
+                "command": "finish.sh",
+                "condition": true
+            },
+            "tips": "When you use the 'cd' command without giving it the name of a directory, it simply takes you back to your home directory. Note that the 'rmdir' command WILL FAIL, and the error will show you why. The next 'rm' command should work.",
+            "successMessage": "Ok, it looks like you've removed all of the lab files and have finished. Very good.",
+            "retryMessage": "You may have missed something. You are either in the wrong directory, or the lab_data directory has not yet been removed."
+        }
+    ],
+    "flags": [1216, 3597, 6333],
+    "bonusFlags": [9821]
+}
