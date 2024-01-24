@@ -140,6 +140,7 @@ func (s *Status) NewLab(lab *Lab) {
 	newResult.TotalFlags = len(lab.Flags)
 	newResult.BonusFlags = make([]int, 0)
 	newResult.TotalBonusFlags = len(lab.BonusFlags)
+	newResult.Questions = make(map[string]string)
 	s.Results[lab.Number] = &newResult
 }
 
