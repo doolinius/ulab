@@ -18,30 +18,31 @@ type Question struct {
 	Feedback string   `json:"feedback"`
 }
 
-func (q *Question) Ask() {
+func (q *Question) Ask() bool {
+	var answer int
 	// Print question prompt
 	// Print options if necessary
 	// Prompt for answer
 	// Validate input
 	// Check answer
-	fmt.Println("			** QUESTION **")
+	fmt.Printf("			** QUESTION **\n\n")
 	fmt.Printf("%s\n\n", q.Text)
 	switch q.Type {
 	case "TF":
-		fmt.Printf("\ttrue or false?\n\n")
 		answer := getTF()
-		fmt.Printf("%s\n", answer)
-		//q.CheckAnswer(answer)
-	case "MC", "MS", "ORD":
-		for i, option := range q.Options {
-			fmt.Printf("\t%d - %s\n", i+1, option)
-		}
+		q.Check(answer)
+	case "MC":
+		answer = q.getOption()
+	case "MS", "ORD":
 	case "NUM":
 	}
+	return q.Check(answer)
 }
 
-func getTF() string {
+func getTF() int {
 	var answer string
+
+	fmt.Printf("\ttrue or false?\n\n")
 	fmt.Printf("	=> ")
 	fmt.Scan(&answer)
 	answer = strings.ToLower(answer)
@@ -51,7 +52,28 @@ func getTF() string {
 		fmt.Scan(&answer)
 		answer = strings.ToLower(answer)
 	}
-	return answer
+	if answer == "true" {
+		return 1
+	} else {
+		return 0
+	}
+}
+
+func (q *Question) getOption() int {
+	for i, option := range q.Options {
+		fmt.Printf("\t%d - %s\n", i+1, option)
+	}
+	return getInt(len(q.Options))
+}
+
+func (q *Question) Check(answer int) bool {
+	switch q.Type {
+	case "TF", "NUM", "MC":
+		return answer == q.Correct[0]
+	case "MS", "ORD":
+		break
+	}
+	return false
 }
 
 func (q *Question) getAnswer() {
@@ -87,4 +109,23 @@ func (q *Question) getAnswer() {
 			_, err = fmt.Scanf("%d", &answer)
 		}
 	}
+}
+
+func getInt(max int) int {
+	stdin := bufio.NewReader(os.Stdin)
+	var num int
+
+	for {
+		fmt.Printf("	=> ")
+		_, err := fmt.Scanf("%d\n", &num)
+		if err != nil {
+			fmt.Printf("%v\n", err)
+			stdin.ReadString('\n')
+		} else if num > max || num < 1 {
+			fmt.Printf("Invalid choice.\n")
+		} else {
+			return num
+		}
+	}
+
 }

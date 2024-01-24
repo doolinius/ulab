@@ -145,6 +145,10 @@ func labCheck(s *ulab.Status) {
 	if l.Check(s.CurrentStep) {
 		s.Complete(l.Number, s.CurrentStep)
 		s.Save()
+		// If there is a Question to ask
+		if l.Steps[s.CurrentStep].Question.Type != "" {
+			l.Steps[s.CurrentStep].Question.Ask()
+		}
 		// only prompt to move to the next step if the steps are not
 		// completed
 		if !s.StepsCompleted(l.Number) {
