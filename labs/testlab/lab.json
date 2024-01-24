@@ -55,8 +55,8 @@
             "text":"Let's organize some of this. There are lots of different file types in here, so let's create some directories for storing them in a more organized way. We'll start with the Word documents.",
             "tasks": ["mkdir documents"],
             "test": {
-                "testType": "ls documents",
-                "command": "true",
+                "testType": "command",
+                "command": "ls documents",
                 "condition": true
             },
             "tips": "The command to create a new directory is 'mkdir', short for 'make directory'. You have to supply the name of the new directory as an argument.",
@@ -166,14 +166,14 @@
         {
             "text":"It's time to create copies of a file.",
             "tasks": [
-                "cp info.zip info_copy.zip",
+                "cp example.zip example_copy.zip",
                 "mkdir backup",
-                "cp info.zip repeating_a.txt backup",
+                "cp example.zip repeating_a.txt backup",
                 "ls -l backup"
             ],
             "test": {
                 "testType": "command",
-                "command": "ls backup/info.zip && ls backup/repeating_a.txt",
+                "command": "ls backup/example.zip && ls backup/repeating_a.txt",
                 "condition": true
             },
             "tips": "The 'cp' command requires source files and a destination directory. In the first example, you will create a copy of the 'info.zip' file in this directory, so it has to have a new name. In the second example, you will create copies of two files in the 'backup' directory.",

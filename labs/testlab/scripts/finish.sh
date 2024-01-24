@@ -1,10 +1,15 @@
 #!/bin/sh
 
 PWD=`pwd`
-SHOULD_BE="/home/$USER/lab_data"
+SHOULD_BE="$HOME"
 if [ "${PWD}" != "${SHOULD_BE}" ] 
 then
     exit 1
 else
-    ls lab_data
+    if ls lab_data/
+    then
+        exit 1
+    else
+        exit 0
+    fi
 fi
