@@ -34,15 +34,22 @@ func main() {
 		if len(os.Args) != 3 {
 			fmt.Printf("A lab number must be supplied when starting a new lab.\n")
 			printUsage()
-		} else {
-			//fmt.Printf("Starting Lab %s\n", os.Args[2])
-			if userStatus.LabComplete(os.Args[2]) {
-				fmt.Printf("This lab has already been submitted.\n")
-				os.Exit(1)
-			} else {
-				labStart(os.Args[2], user, userStatus)
-			}
+			os.Exit(1)
 		}
+		//fmt.Printf("Starting Lab %s\n", os.Args[2])
+		if userStatus.LabComplete(os.Args[2]) {
+			fmt.Printf("This lab has already been submitted.\n")
+			os.Exit(1)
+		}
+
+		// make sure user in HOME directory
+		if os.Getenv("PWD") != os.Getenv("HOME") {
+			fmt.Printf("Labs should always be started in your HOME directory. Please 'cd' to your home directory and try again.\n\n")
+			os.Exit(1)
+		}
+
+		labStart(os.Args[2], user, userStatus)
+
 	case "status":
 		// TODO: necessary checks
 		if userStatus.CurrentLab == "" {
