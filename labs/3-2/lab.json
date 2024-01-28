@@ -48,8 +48,8 @@
             "text":"Let's organize some of this. There are lots of different file types in here, so let's create some directories for storing them in a more organized way. We'll start with the Word documents.",
             "tasks": ["mkdir documents"],
             "test": {
-                "testType": "ls documents",
-                "command": "true",
+                "testType": "command",
+                "command": "ls documents",
                 "condition": true
             },
             "tips": "The command to create a new directory is 'mkdir', short for 'make directory'. You have to supply the name of the new directory as an argument.",
@@ -81,36 +81,22 @@
             "retryMessage": "There are still .docx files in your present working directory. You may want to double check your command syntax, such as making sure there are spaces between 'ls' and '*.docx'."
         },
         {
-            "text":"Let's do the same thing with the Excel files.",
+            "text":"Let's do the same thing with the Excel files and the photos (.jpg).",
             "tasks": [
                 "[create a directory called 'spreadsheets']",
                 "[move all of the .xlsx files to the 'spreadsheets' directory]",
-                "ls"
-            ],
-            "test": {
-                "testType": "command",
-                "command": "ls spreadsheets && ls spreadsheets/*.xlsx",
-                "condition": true
-            },
-            "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps if you like.",
-            "successMessage": "Good, the organization is getting better.",
-            "retryMessage": "Something went wrong. Either the 'spreadsheets' directory is not there, is named incorrectly, or the .xlsx files have not been moved into it."
-        },
-        {
-            "text":"And lastly, let's take care of the photos.",
-            "tasks": [
                 "[create a directory called 'photos']",
                 "[move all of the .jpg files to the 'photos' directory]",
                 "ls"
             ],
             "test": {
                 "testType": "command",
-                "command": "ls photos && ls photos/*.jpg",
+                "command": "ls spreadsheets && ls spreadsheets/*.xlsx && ls photos && ls photos/*.jpg",
                 "condition": true
             },
             "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps if you like.",
-            "successMessage": "Much better. We've cleaned up this directory by organizing files into sub-directories for different file types.",
-            "retryMessage": "Something went wrong. Either the 'photos' directory is not there, is named incorrectly, or the .jpg files have not been moved into it."
+            "successMessage": "Good, the file organization is now much better.",
+            "retryMessage": "Something went wrong. Either the 'spreadsheets' directory is not there, is named incorrectly, or the .xlsx files have not been moved into it."
         },
         {
             "text":"Now, let's rename a file.",
@@ -159,14 +145,14 @@
         {
             "text":"It's time to create copies of a file.",
             "tasks": [
-                "cp info.zip info_copy.zip",
+                "cp example.zip example_copy.zip",
                 "mkdir backup",
-                "cp info.zip repeating_a.txt backup",
+                "cp example.zip repeating_a.txt backup",
                 "ls -l backup"
             ],
             "test": {
                 "testType": "command",
-                "command": "ls backup/info.zip && ls backup/repeating_a.txt",
+                "command": "ls backup/example.zip && ls backup/repeating_a.txt",
                 "condition": true
             },
             "tips": "The 'cp' command requires source files and a destination directory. In the first example, you will create a copy of the 'info.zip' file in this directory, so it has to have a new name. In the second example, you will create copies of two files in the 'backup' directory.",
