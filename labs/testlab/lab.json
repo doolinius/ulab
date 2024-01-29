@@ -1,5 +1,5 @@
 {
-    "number": "3-2",
+    "number": "testlab",
     "name": "Basic File Management",
     "description": "In this lab you will get practice using the Unix command line interface to perform basic file management tasks, such as creating and removing directories/folders, moving, copying and renaming files and navigation. While these tasks may feel tedious at first, it does get easer and faster with practice, to a point where it becomes muscle memory and faster that using a graphical interface.",
     "dataFiles": true,
@@ -18,7 +18,14 @@
                 "condition": true
             },
             "successMessage": "Very good, you have changed to this new directory. Think of it like moving to a new room, with different files.",
-            "retryMessage": "Hmmm... Looks like you're in the wrong directory. You should start all labs from your home directory. Type 'ls' to make sure the 'lab_data' directory is there. Type 'pwd' to see if you are in your home directory."
+            "retryMessage": "Hmmm... Looks like you're in the wrong directory. You should start all labs from your home directory. Type 'ls' to make sure the 'lab_data' directory is there. Type 'pwd' to see if you are in your home directory.",
+            "question" : {
+                "type":"NUM",
+                "text":"What year did Wendy and Jeremy start dating?",
+                "options":[],
+                "correct":[2005],
+                "feedback":"That was a very good year."
+            }
         },
         {
             "text":"Ok, let's see what's in this lab_data directory. This time we're going to pass some flags to the 'ls' command so we can get more information.",
@@ -81,22 +88,36 @@
             "retryMessage": "There are still .docx files in your present working directory. You may want to double check your command syntax, such as making sure there are spaces between 'ls' and '*.docx'."
         },
         {
-            "text":"Let's do the same thing with the Excel files and the photos (.jpg).",
+            "text":"Let's do the same thing with the Excel files.",
             "tasks": [
                 "[create a directory called 'spreadsheets']",
                 "[move all of the .xlsx files to the 'spreadsheets' directory]",
+                "ls"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "ls spreadsheets && ls spreadsheets/*.xlsx",
+                "condition": true
+            },
+            "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps if you like.",
+            "successMessage": "Good, the organization is getting better.",
+            "retryMessage": "Something went wrong. Either the 'spreadsheets' directory is not there, is named incorrectly, or the .xlsx files have not been moved into it."
+        },
+        {
+            "text":"And lastly, let's take care of the photos.",
+            "tasks": [
                 "[create a directory called 'photos']",
                 "[move all of the .jpg files to the 'photos' directory]",
                 "ls"
             ],
             "test": {
                 "testType": "command",
-                "command": "ls spreadsheets && ls spreadsheets/*.xlsx && ls photos && ls photos/*.jpg",
+                "command": "ls photos && ls photos/*.jpg",
                 "condition": true
             },
             "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps if you like.",
-            "successMessage": "Good, the file organization is now much better.",
-            "retryMessage": "Something went wrong. Either the 'spreadsheets' directory is not there, is named incorrectly, or the .xlsx files have not been moved into it."
+            "successMessage": "Much better. We've cleaned up this directory by organizing files into sub-directories for different file types.",
+            "retryMessage": "Something went wrong. Either the 'photos' directory is not there, is named incorrectly, or the .jpg files have not been moved into it."
         },
         {
             "text":"Now, let's rename a file.",

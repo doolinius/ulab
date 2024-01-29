@@ -85,3 +85,58 @@ Grading by Username and Lab Number
 Grading by Submission Number 
 -Prints full details of a single Lab submission for a user 
 -Open ???
+
+Questions
+
+{
+	"type":"MC",
+	"qText:"What is the thing with the stuff?",
+	"options":[
+		"foo",
+		"bar",
+		"baz",
+		"quux"
+	],
+	"correct":"a",
+	"feedback":""
+},
+{
+	"type":"MS",
+	"qText:"What are the things with the stuff?",
+	"options":[
+		"foo",
+		"bar",
+		"baz",
+		"quux"
+	],
+	"correct":[1, 2],
+	"feedback":""
+},
+{
+	"type":"TF",
+	"qText":"Does the thing have the stuff?",
+	"correct":"true",
+	"feedback",""
+},
+{
+	"type":"NUM",
+	"qText":"How many things have the stuff?",
+	"correct":3,
+	"feedback":""
+},
+{
+	"type":"SA",
+	"qText":"Describe the things and stuff"
+},
+{
+	"type":"ORD",
+	"qText":"Order the following things:",
+	"items":[
+		"thing3",
+		"thing2",
+		"thing4",
+		"thing1"
+	],
+	"correct":[4,2,1,3],
+	"feedback"
+}

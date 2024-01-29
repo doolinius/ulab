@@ -21,6 +21,8 @@ type LabResult struct {
 	TotalFlags      int      `json:"totalFlags"`
 	BonusFlags      []int    `json:"bonusFlags"`
 	TotalBonusFlags int      `json:"totalBonusFlags"`
+	Questions       map[string]string
+	TotalQuestions  int `json:"totalQuestions"`
 }
 
 type Status struct {
@@ -43,12 +45,18 @@ func (s *Status) QuickScore(labNum string) {
 }
 
 func (lr *LabResult) TotalScore() int {
-	return lr.TotalSteps + lr.TotalFlags
+	return lr.TotalSteps + lr.TotalFlags + lr.TotalQuestions
 }
 
 func (lr *LabResult) Score() (int, int) {
 	numSteps, _ := lr.StepStatus()
-	score := numSteps + len(lr.Flags) + len(lr.BonusFlags)
+	correctQuesions := 0
+	for _, q := range lr.Questions {
+		if q == "correct" {
+			correctQuesions++
+		}
+	}
+	score := numSteps + len(lr.Flags) + correctQuesions + len(lr.BonusFlags)
 	return score, lr.TotalScore()
 }
 
@@ -75,12 +83,20 @@ func (s *Status) ScoreReport(labNum string) {
 	numFlags := len(result.Flags)
 	numBonusFlags := len(result.BonusFlags)
 	numSteps, numTotalSteps := result.StepStatus()
+	numQuestions := len(result.Questions)
+	numCorrect := 0
+	for _, q := range result.Questions {
+		if q == "correct" {
+			numCorrect++
+		}
+	}
 
-	score = numSteps + numFlags + numBonusFlags
-	fmt.Printf("Steps completed: %d/%d\n", numSteps, numTotalSteps)
-	fmt.Printf(" Flags captured: %d/%d\n", numFlags, result.TotalFlags)
-	fmt.Printf("    Bonus Flags: %d/%d\n", numBonusFlags, result.TotalBonusFlags)
-	fmt.Printf("    Total Score: %d/%d\n", score, numTotalSteps+result.TotalBonusFlags)
+	score = numSteps + numFlags + numCorrect + numBonusFlags
+	fmt.Printf("   Steps completed: %d/%d\n", numSteps, numTotalSteps)
+	fmt.Printf("    Flags captured: %d/%d\n", numFlags, result.TotalFlags)
+	fmt.Printf("Questions answered: %d/%d\n", numCorrect, numQuestions)
+	fmt.Printf("       Bonus Flags: %d/%d\n", numBonusFlags, result.TotalBonusFlags)
+	fmt.Printf("       Total Score: %d/%d\n", score, numTotalSteps+result.TotalFlags+result.TotalQuestions)
 }
 
 func (s *Status) FullResults() {
@@ -139,6 +155,13 @@ func (s *Status) NewLab(lab *Lab) {
 	newResult.TotalFlags = len(lab.Flags)
 	newResult.BonusFlags = make([]int, 0)
 	newResult.TotalBonusFlags = len(lab.BonusFlags)
+	newResult.Questions = make(map[string]string)
+	newResult.TotalQuestions = 0
+	for _, step := range lab.Steps {
+		if step.Question.Type != "" {
+			newResult.TotalQuestions++
+		}
+	}
 	s.Results[lab.Number] = &newResult
 }
 
@@ -176,6 +199,11 @@ func (s *Status) AddBonusFlag(labNum string, flagNum int) {
 	}
 	result.BonusFlags = append(result.BonusFlags, flagNum)
 	s.Save()
+}
+
+func (s *Status) AddQuestionResult(labNum string, qNum string, qResult string) {
+	result := s.GetResults(labNum)
+	result.Questions[qNum] = qResult
 }
 
 func (s *Status) FlagStatus(l *Lab) (int, int) {

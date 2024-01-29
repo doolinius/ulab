@@ -20,6 +20,7 @@ type Step struct {
 	Test           StepTest `json:"test"`
 	SuccessMessage string   `json:"successMessage"`
 	RetryMessage   string   `json:"retryMessage"`
+	Question       Question `json:"question"`
 }
 
 type Lab struct {
