@@ -68,6 +68,19 @@ func main() {
 		}
 		lab := ulab.OpenLabFile(userStatus.CurrentLab)
 		lab.PrintStep(userStatus.CurrentStep)
+	case "resume":
+		// TODO: necessary checks
+		if userStatus.CurrentLab == "" {
+			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
+			fmt.Printf("\n\tlab start <lab number>\n\n")
+			os.Exit(1)
+		}
+		err := os.Chdir(userStatus.LastPWD)
+		if err != nil {
+			fmt.Printf("Could not change to last PWD: %v\n", err)
+		}
+		lab := ulab.OpenLabFile(userStatus.CurrentLab)
+		lab.PrintStep(userStatus.CurrentStep)
 	case "check":
 		// TODO: necessary checks
 		if userStatus.CurrentLab == "" {
@@ -151,6 +164,7 @@ func labCheck(s *ulab.Status) {
 	// check status of current step
 	if l.Check(s.CurrentStep) {
 		s.Complete(l.Number, s.CurrentStep)
+		s.SetPWD()
 		s.Save()
 		// If there is a Question to ask
 		q := l.Steps[s.CurrentStep].Question
@@ -278,6 +292,7 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 	s.CurrentStep = 0
 	// Add new LabResult field to Status
 	s.NewLab(lab)
+	s.SetPWD()
 	s.Save()
 
 	// Print greeting

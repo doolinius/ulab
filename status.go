@@ -30,6 +30,7 @@ type Status struct {
 	Fullname    string                `json:"fullName"`
 	CurrentLab  string                `json:"currentLab"`
 	CurrentStep int                   `json:"currentStep"`
+	LastPWD     string                `json:"lastPWD"`
 	Results     map[string]*LabResult `json:"results"`
 }
 
@@ -126,6 +127,10 @@ func (s *Status) Submit(lab *Lab) {
 	s.CurrentLab = ""
 	s.CurrentStep = -1
 	s.Save()
+}
+
+func (s *Status) SetPWD() {
+	s.LastPWD = os.Getenv("PWD")
 }
 
 func (s *Status) LabComplete(labNum string) bool {
