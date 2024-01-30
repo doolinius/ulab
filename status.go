@@ -38,9 +38,9 @@ func (s *Status) QuickScore(labNum string) {
 	if lr != nil {
 		score, totalScore := lr.Score()
 		scoreStr := fmt.Sprintf("%d/%d", score, totalScore)
-		fmt.Printf("%16s: %7s    %s\n", s.Fullname, scoreStr, lr.SubmissionCode)
+		fmt.Printf("%22s: %6s    %s\n", s.Fullname, scoreStr, lr.SubmissionCode)
 	} else {
-		fmt.Printf("%16s: %7s    %s\n", s.Fullname, "0", "Not Attempted")
+		fmt.Printf("%22s: %6s    %s\n", s.Fullname, "0", "Not Attempted")
 	}
 }
 
