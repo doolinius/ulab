@@ -1,0 +1,21 @@
+You are now using a text editor called 'nano'. Think of it as the Unix terminal version of Windows
+Notepad. It is a free, open source clone of an editor called "PICO" that dates back to 1989. So 
+some of the commands for using nano may seem a little foreign.
+
+Look at the bottom of the screen.  You will see things like: ^G Get Help, and ^O WriteOut. These
+are the main keyboard shortcuts. The ^ character means "Control/Ctrl Key".  In other words, to
+Get Help, hold the Control key and press the G key. Even though the letters are displayed as as
+uppercase, you do not have to hold Shift key. ^G is just 'Ctrl + g'.
+
+The command to Save is ^O (WriteOut). When you save, it will prompt you at the bottom of the screen
+for a filename to use. If you are editing an existing file, or have already supplied a name, it will
+default to this name and you can just press 'Enter' to save the file. 
+
+The command to Exit is ^X. If you have unsaved changes, it will prompt you to save the file. Press
+'y' to confirm or 'n' to not save. If you choose to save, it will ask you for a filename just like 
+it does for ^O. After saving, it will exit. If you do not have unsaved changes, it will promptly exit. 
+
+nano has more features, but these should be enough to get you by. Feel free to check out Get Help 
+to learn more.
+
+flag_7878

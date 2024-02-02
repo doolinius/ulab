@@ -1,0 +1,3 @@
+Well hi! Looks like you're having fun with Unix pipes. 'cowsay' lets you pipe the output of a command to me, and I'll say it for you! Read the 'cowsay' man page to see other options, including having other ascii art characters say the words. 'lolcat' adds a rainbow of color to what may otherwise be some bland, boring white on black text. You can pipe the output of any command to 'lolcat'. 
+
+Oh, and the boss said to tell you 'flag_3035', whatever that means.

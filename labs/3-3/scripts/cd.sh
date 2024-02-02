@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PWD=`pwd`
-SHOULD_BE="/home/$USER/datafiles"
+SHOULD_BE="$HOME/datafiles"
 if [ "${PWD}" != "${SHOULD_BE}" ] 
 then
     exit 0

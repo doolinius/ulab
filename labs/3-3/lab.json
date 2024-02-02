@@ -1,177 +1,233 @@
 {
-    "number": "3-2",
-    "name": "Basic File Management",
-    "description": "In this lab you will get practice using the Unix command line interface to perform basic file management tasks, such as creating and removing directories/folders, moving, copying and renaming files and navigation. While these tasks may feel tedious at first, it does get easer and faster with practice, to a point where it becomes muscle memory and faster that using a graphical interface.",
+    "number": "3-3",
+    "name": "Files, I/O Redirection and Pipes",
+    "description": "The Unix philosophy, as described by Doug McIlroy is as follows: \n\t1) Write small programs that do one thing and do it well. \n\t2) Write programs to work together, and... \n\t3) Write these tools to work with simple text streams, a universal data format. \n\nThis lab will illustrate these principles by giving you practice with simple Unix tools, creating text, redirecting output and of course, pipes.",
     "dataFiles": true,
     "submitMessage":"",
     "steps": [
         {
-            "text": "This lab has extracted a folder of data files in your home directory. You need to change to this directory (remember that 'directory' and 'folder' mean the same thing).",
+            "text": "This lab has extracted a folder of data files in your home directory. You need to change to this directory.",
             "tasks": [
-                "ls",
-                "cd lab_data"
+                "[change to the lab_data directory]"
             ],
-            "tips": "When you run the 'ls' command, you should see the new folder, 'lab_data', that was created when you started the lab. 'cd' stands for (c)hange (d)irectory, and it will move your present working directory into the new one.",
+            "tips": "This is the same first step as lab 3-2.",
             "test": {
                 "testType": "script",
                 "command": "cd.sh",
                 "condition": true
             },
-            "successMessage": "Very good, you have changed to this new directory. Think of it like moving to a new room, with different files.",
+            "successMessage": "Very good, you have changed to this new directory. The files will be different for this lab, however.",
             "retryMessage": "Hmmm... Looks like you're in the wrong directory. You should start all labs from your home directory. Type 'ls' to make sure the 'lab_data' directory is there. Type 'pwd' to see if you are in your home directory."
         },
         {
-            "text":"Ok, let's see what's in this lab_data directory. This time we're going to pass some flags to the 'ls' command so we can get more information.",
-            "tasks": ["ls -l"],
+            "text":"Ok, let's see what's in the directory, and in one of the files.",
+            "tasks": ["[list the contents of the directory]", "[use the 'cat' command to see what is in people.txt]"],
             "test": {
                 "testType": "command",
                 "command": "true",
                 "condition": true
             },
-            "tips": "The -l flag tells 'ls' to print a 'long' listing, that includes file details. These details include permissions settings, the user/group that owns the file, the file size, and last modification date.",
-            "successMessage": "Most of these files are empty files with a size of 0 bytes. They are just for practice, so they don't need to have real content. But there are two files that do have content. Take a look at the file size of letter_a.txt. That number is a flag. Capture it!",
+            "tips": "You will use the same commands from previous labs for this step.",
+            "successMessage": "You should see some familiar names in the people.txt file.",
             "retryMessage": "I'm not sure why this would fail."
         },
         {
-            "text":"You can also list the files for a directory that you are not in.",
-            "tasks": ["ls -l look_here"],
+            "text":"You often need to look at the contents of a file that is too large for cat to display on one screen.",
+            "tasks": ["less using_less.txt"],
             "test": {
                 "testType": "command",
                 "command": "true",
                 "condition": true
             },
-            "tips": "If you pass the name of a directory to 'ls', it will list the contents of that directory instead of your present working directory, without having to be in it.",
-            "successMessage": "Very good. In time, you'll learn how you can list the contents of any directory on the whole system, no matter which one is your present working directory.",
+            "tips": "Press 'q' to exit 'less' when you are finished. .",
+            "successMessage": "Pagers are very useful for viewing files when there is too much output for cat, or that you cannot or do not want to modify.",
             "retryMessage": "I'm not sure why this would fail."
         },
         {
-            "text":"Let's organize some of this. There are lots of different file types in here, so let's create some directories for storing them in a more organized way. We'll start with the Word documents.",
-            "tasks": ["mkdir documents"],
+            "text":"Let's use a text editor to view a file this time.",
+            "tasks": ["nano using_nano.txt"],
             "test": {
-                "testType": "ls documents",
+                "testType": "command",
                 "command": "true",
                 "condition": true
             },
-            "tips": "The command to create a new directory is 'mkdir', short for 'make directory'. You have to supply the name of the new directory as an argument.",
-            "successMessage": "Good, now it's time to move all of the word documents into this new directory.",
-            "retryMessage": "The 'documents' directory does not seem to be there. Remember that Unix filenames are usually case sensitive, so if you spelled it with a capital D, as in 'Documents', that is incorrect."
+            "tips": "This file contains some basic information about the 'nano' text editor. Read this information carefully.",
+            "successMessage": "Did you see the flag? If you missed it, try opening the file again.",
+            "retryMessage": "I'm not sure why this would fail."
         },
         {
-            "text":"There are several word documents here, so let's start by moving just one.",
-            "tasks": ["mv english_paper.docx documents"],
+            "text":"Now use nano to create a new file. Enter the following command, use the editor to type your full name, then save and exit.",
+            "tasks": ["nano me.txt"],
             "test": {
                 "testType": "command",
-                "command": "ls documents/english_paper.docx",
+                "command": "ls me.txt",
                 "condition": true
             },
-            "tips": "The command to move files from one directory to another is 'mv'. You have to supply the file or files you wish to move, followed by the destination directory where you want them to be moved to.",
-            "successMessage": "Ok, it looks like the 'english_paper.docx' has been successfully moved to the new directory. Good.",
-            "retryMessage": "The 'english_paper.docx' file does not seem to be in the 'documents' directory. Please check your spelling and try again."
+            "tips": "Remember that nano displays the keyboard shortcuts at the bottom of the screen. And don't try to use your mouse, no matter how tempting it may be.",
+            "successMessage": "Very good. Editing text files is a very common task when running Unix systems. Most of their configuration is done using text files, so this is a task that you should become very familiar with.",
+            "retryMessage": "I don't see the file called 'me.txt'. Be sure that you saved the file from nano, or that you named it correctly."
         },
         {
-            "text":"It would be tedious to move ALL of the Word documents into that directory one at a time, so let's use a file wildcard to make this faster.",
-            "tasks": ["mv *.docx documents", "ls"],
+            "text":"Next we're going to look at the 'echo' command. Echo is something like a print statement, that prints what you tell it to.",
+            "tasks": ["echo \"Tony Stark\""],
             "test": {
                 "testType": "command",
-                "command": "ls *.docx",
-                "condition": false
+                "command": "true",
+                "condition": true
             },
-            "tips": "The * character is known as the 'wildcard' character. That is because it means 'any text'. In this example, it means 'any text, followed by .docx'. This is useful for referring to many files of the same type, such as in this example.",
-            "successMessage": "It looks like all of the .docx files have been moved, good job.",
-            "retryMessage": "There are still .docx files in your present working directory. You may want to double check your command syntax, such as making sure there are spaces between 'ls' and '*.docx'."
+            "tips": "'echo' is not the same thing as 'cat'. 'cat' prints the contents of a file, while 'echo' prints text that is passed to it.",
+            "successMessage": "Nothing major, just a print statement for now.",
+            "retryMessage": "Should not fail."
         },
         {
-            "text":"Let's do the same thing with the Excel files.",
+            "text":"Now let's look at a feature called Output Redirection. Most commands that produce output print this output to the terminal, as we see right now. That's what happend with the 'echo' command in the last step. But you can also redirect the output to a file instead.",
+            "tasks": ["echo \"Tony Stark\" > iron_man.txt", "ls", "cat iron_man.txt"],
+            "test": {
+                "testType": "command",
+                "command": "ls iron_man.txt",
+                "condition": true
+            },
+            "tips": "The '>' character is the output redirect character. If you add this character and a filename to the end of a command, the output will go to the filename you provide instead of the terminal. The '>' even looks like a funnel that's going to take the output and funnel it into a file.",
+            "successMessage": "Notice how you didn't see any output when you redirected it to the 'iron_man.txt' file. But the 'ls' command confirms that it was created, and the 'cat' command shows that the output redirected successfully.",
+            "retryMessage": "The iron_man.txt file does not exist here. Double check your command syntax and filenam spelling and try again."
+        },
+        {
+            "text":"Now let's 'cat' three files at once, in two different ways.",
             "tasks": [
-                "[create a directory called 'spreadsheets']",
-                "[move all of the .xlsx files to the 'spreadsheets' directory]",
+                "cat people.txt me.txt iron_man.txt",
+                "cat people.txt me.txt iron_man.txt > everyone.txt",
                 "ls"
             ],
             "test": {
                 "testType": "command",
-                "command": "ls spreadsheets && ls spreadsheets/*.xlsx",
+                "command": "ls everyone.txt",
                 "condition": true
             },
-            "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps if you like.",
-            "successMessage": "Good, the organization is getting better.",
-            "retryMessage": "Something went wrong. Either the 'spreadsheets' directory is not there, is named incorrectly, or the .xlsx files have not been moved into it."
+            "tips": "The first command will output the contents of all three files at once. The second one will redirect the output to a new file.",
+            "successMessage": "You now have the content of all three files in one. This use of cat and output redirection can be used to easily combine the contents of multiple files into just one.",
+            "retryMessage": "It looks like 'everyone.txt' is still not there. Double check your spelling and command syntax and try again."
         },
         {
-            "text":"And lastly, let's take care of the photos.",
+            "text":"Now for a demonstration of 'pipes', a fundamental part of the Unix philosophy and one of the most useful parts of the command line. A pipe is similar to output redirection, but instead of sending the output to a file, it sends it as the input to another program. In this case, it will send the output of the 'cat' command as input for the 'less' pager. Remember to press 'q' to exit the pager.",
             "tasks": [
-                "[create a directory called 'photos']",
-                "[move all of the .jpg files to the 'photos' directory]",
-                "ls"
-            ],
-            "test": {
-                "testType": "command",
-                "command": "ls photos && ls photos/*.jpg",
-                "condition": true
-            },
-            "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps if you like.",
-            "successMessage": "Much better. We've cleaned up this directory by organizing files into sub-directories for different file types.",
-            "retryMessage": "Something went wrong. Either the 'photos' directory is not there, is named incorrectly, or the .jpg files have not been moved into it."
-        },
-        {
-            "text":"Now, let's rename a file.",
-            "tasks": [
-                "mv letter_a.txt repeating_a.txt",
-                "ls"
-            ],
-            "test": {
-                "testType": "command",
-                "command": "ls repeating_a.txt",
-                "condition": true
-            },
-            "tips": "The 'mv' command is also the command for renaming files. In this case, you must supply the 'mv' command with the current filename followed by the new filename.",
-            "successMessage": "Nice work. You can also rename a file while moving it to a new directory. Just supply the new filename along with the destination directory. For example: mv photo16.jpg photos/mycat.jpg.",
-            "retryMessage": "The new file 'repeating_a.txt' does not exist. Double check your spelling, especially if you accidentally renamed it to the wrong name."
-        },
-        {
-            "text":"Let's check for hidden files.",
-            "tasks": [
-                "ls -a"
+                "cat everyone.txt | less"
             ],
             "test": {
                 "testType": "command",
                 "command": "true",
                 "condition": true
             },
-            "tips": "Any files whose names begin with a dot (.) are not listed by default when you run 'ls'. These are called 'dotfiles'. They aren't used for actually hiding data, but they are usually configuration or settings files that you probably don't need to see all of the time. Try 'ls -a' in your home directory after submitting this lab and you'll see some config files.",
-            "successMessage": "Hmm... notice anything about that hidden filename?",
-            "retryMessage": ""
+            "tips": "The pipe symbol is '|', sometimes called the vertical bar, usually typed by pressing Shift + the backslash key.",
+            "successMessage": "Sometimes the output of a command is too much to view in the terminal, so piping the output to 'less' gives you an easy way to read it. This was a simple example of using pipes.",
+            "retryMessage": "Should not fail."
         },
         {
-            "text":"Now, let's try unzipping a file.",
+            "text":"Now let's look at a couple more interesting examples. You will still cat 'everyone.txt' but this time you will pipe the output to two different programs. The first is the 'wc' or 'word count' program. You will pass '-l' to count only the lines. The second is 'sort', which not surprisingly, will sort the lines of the file.",
             "tasks": [
-                "unzip example.zip",
-                "ls -l"
+                "[cat everyone.txt and pipe to 'wc -l']",
+                "[cat everyone.txt and pipe to 'sort']"
             ],
             "test": {
                 "testType": "command",
-                "command": "ls whats_this.txt",
+                "command": "true",
                 "condition": true
             },
-            "tips": "Zip files are a common file compression format across many operating systems. It is a way of collecting multiple files into a single file, and/or to compress files so that it uses less storage space. The 'unzip' command requires that you supply the name of the zip file that you want to extract. It will then show you the files that it created.",
-            "successMessage": "Extracting compressed and archived files is a common task in any system. We'll be looking at more file formats that are more commonly used on Unix systems in a future lab.",
-            "retryMessage": "Unzipping this file should have resulted in a new file being created, but I don't see it."
+            "tips": "The command will be the same as the previous step, but you will pipe to 'wc -l' and 'sort' instead of 'less'.",
+            "successMessage": "We're starting to see the Unix philosophy at work.",
+            "retryMessage": "Should not fail."
         },
         {
-            "text":"It's time to create copies of a file.",
+            "text":"You can continue to add more pipes to a single command, and even combine them with output redirection. Let's try that. You will pipe the output of cat to sort, then to a program called 'uniq' that removes duplicate lines of text. First you will run the command so you can see the output, then redirect the same command to a new file.",
             "tasks": [
-                "cp info.zip info_copy.zip",
-                "mkdir backup",
-                "cp info.zip repeating_a.txt backup",
-                "ls -l backup"
+                "cat everyone.txt | sort | uniq",
+                "cat everyone.txt | sort | uniq > everyone_sorted.txt"
             ],
             "test": {
                 "testType": "command",
-                "command": "ls backup/info.zip && ls backup/repeating_a.txt",
+                "command": "ls everyone_sorted.txt",
                 "condition": true
             },
-            "tips": "The 'cp' command requires source files and a destination directory. In the first example, you will create a copy of the 'info.zip' file in this directory, so it has to have a new name. In the second example, you will create copies of two files in the 'backup' directory.",
-            "successMessage": "Nice job. You have created copies of files in two different ways. 'cp' can be used in many ways. Practice using it to become familiar with them.",
-            "retryMessage": "Something isn't right here. Either the directory was not created, or the files were not copied to it."
+            "tips": "As long as a program/command is written to accept input this way, it can be used in a pipe.",
+            "successMessage": "Pipelines such as this allow a Unix user to string together multiple commands to produce miniature programs to perform a task.",
+            "retryMessage": "The file 'everyone_sorted.txt' does not exist. Check your spelling and command syntax and try again."
+        },
+        {
+            "text":"How about something a little more... colorful.",
+            "tasks": [
+                "cat message.txt | cowsay | lolcat"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "No tips, just run that pipeline of commands. Hehehe..",
+            "successMessage": "You can't accuse Unix developers of not having a sense of humor.",
+            "retryMessage": "Should not fail."
+        },
+        {
+            "text":"The last few steps involve Environment Variables. When you're logged into a Unix system, you have what is called an 'environment', which consists of settings that are used by the shell and even by programs and commands that you run from the shell. Some environment variables are customizable, while others are set automatically. You can even add your own environment variables. Their names are usually in call caps, but to print them you have to begin the name with a dollar sign ('$'). Let's have a look at a few.",
+            "tasks": [
+                "echo $USER",
+                "echo $PWD",
+                "echo $SHELL"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "Remember the echo command from earlier? This time we're using it to view the contents of environment variables.",
+            "successMessage": "These variables contain your username, your present working directory, and the shell program you're currently using. The PWD variable is set automatically every time you change to a new directory. You can see all current environment variables with the 'env' command.",
+            "retryMessage": "Should not fail."
+        },
+        {
+            "text":"The 'PS1' environment variable controls the appearance of your shell prompt. Let's customize it. To create or reset an environment variable, we use the 'export' command.",
+            "tasks": [
+                "echo $PS1",
+                "export PS1=\"(\\u) -> \" (there is a space at the end before the \""
+            ],
+            "test": {
+                "testType": "command",
+                "command": "/opt/ulab/labs/3-3/scripts/ps1.sh",
+                "condition": true
+            },
+            "tips": "Make sure you enter the command exactly as above, including spaces.",
+            "successMessage": "This will only temporarily change your shell prompt. It will go back to the default if you log out and back in.",
+            "retryMessage": "The PS1 environment variable does not equal the sequence specified. Double check everything, as it must be exact."
+        },
+        {
+            "text":"Now let's create our own environment variable. On some Unix systems, there is an environment variable called 'PAGER' that determines which pager program to use when a command needs to display a large amount of text. This system does not have this variable set, so let's do so.",
+            "tasks": [
+                "echo $PAGER     (should be blank)",
+                "export PAGER=less"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "test \"$PAGER\" = \"less\"",
+                "condition": true
+            },
+            "tips": "When you echo a non-existent environment variable, it will be blank.",
+            "successMessage": "Good job. Like PS1 before, this will only temporarily change your shell prompt. It will go back to the default if you log out and back in.",
+            "retryMessage": "The PAGER environment variable does not equal 'less'. Double check everything, as it must be exact."
+        },
+        {
+            "text":"The PATH environment variable is one of the most important. It is a colon separated list of absolute/full paths to folders that contain external commands. The commands are usually binary executables, so most of the time these paths end in 'bin', the traditional directory name for program file binaries (in Windows, these would have a .exe extension). It is sometimes necessary to change your PATH variable to add new paths for software that is installed on your system. Let's see how this works.",
+            "tasks": [
+                "hello   (should produce 'command not found' error)",
+                "echo $PATH",
+                "export OLDPATH=$PATH",
+                "export PATH=$PATH:/opt/bin",
+                "hello"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "hello",
+                "condition": true
+            },
+            "tips": "We're saving your current PATH in another variable, just in case something goes wrong. Modifying the PATH variable here consists of using the old value of $PATH, and adding :/opt/bin to it.",
+            "successMessage": "Great work. You've modified your PATH environment variable. Just as with previous examples, this change is only temporary. To make it permanent, you can modify the '.bash_profile' file in your home directory and add the export commands you wish.",
+            "retryMessage": "It would seem 'hello' still cannot be run. Run the command 'export PATH=$OLDPATH' and try modifying the PATH variable again."
         },
         {
             "text":"To finish this lab, we'll go back to your home directory and remove the files that were extracted for this lab.",
@@ -191,6 +247,6 @@
             "retryMessage": "You may have missed something. You are either in the wrong directory, or the lab_data directory has not yet been removed."
         }
     ],
-    "flags": [1216, 3597, 6333],
-    "bonusFlags": [9821]
+    "flags": [7878, 1705, 3035],
+    "bonusFlags": [1029, 4567]
 }
