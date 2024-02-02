@@ -52,61 +52,33 @@ func main() {
 
 	case "status":
 		// TODO: necessary checks
-		if userStatus.CurrentLab == "" {
-			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
-			fmt.Printf("\n\tlab start <lab number>\n\n")
-			os.Exit(1)
-		}
+		inProgressCheck(userStatus)
+		pwdCheck(userStatus)
 		lab := ulab.OpenLabFile(userStatus.CurrentLab)
 		lab.PrintSteps(userStatus)
 	case "current":
 		// TODO: necessary checks
-		if userStatus.CurrentLab == "" {
-			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
-			fmt.Printf("\n\tlab start <lab number>\n\n")
-			os.Exit(1)
-		}
-		lab := ulab.OpenLabFile(userStatus.CurrentLab)
-		lab.PrintStep(userStatus.CurrentStep)
-	case "resume":
-		// TODO: necessary checks
-		if userStatus.CurrentLab == "" {
-			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
-			fmt.Printf("\n\tlab start <lab number>\n\n")
-			os.Exit(1)
-		}
-		err := os.Chdir(userStatus.LastPWD)
-		if err != nil {
-			fmt.Printf("Could not change to last PWD: %v\n", err)
-		}
+		inProgressCheck(userStatus)
+		pwdCheck(userStatus)
 		lab := ulab.OpenLabFile(userStatus.CurrentLab)
 		lab.PrintStep(userStatus.CurrentStep)
 	case "check":
 		// TODO: necessary checks
-		if userStatus.CurrentLab == "" {
-			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
-			fmt.Printf("\n\tlab start <lab number>\n\n")
-			os.Exit(1)
-		}
+		inProgressCheck(userStatus)
+		//pwdCheck(userStatus)
 		fmt.Printf("Checking current step...\n")
 		labCheck(userStatus)
 	case "next":
 		// do necessary checks
-		if userStatus.CurrentLab == "" {
-			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
-			fmt.Printf("\n\tlab start <lab number>\n\n")
-			os.Exit(1)
-		}
+		inProgressCheck(userStatus)
+		pwdCheck(userStatus)
 		lab := ulab.OpenLabFile(userStatus.CurrentLab)
 		labNext(lab, userStatus)
 	case "flag":
 		// TODO: Check arg numbers
 		// TODO: necessary checks
-		if userStatus.CurrentLab == "" {
-			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
-			fmt.Printf("\n\tlab start <lab number>\n\n")
-			os.Exit(1)
-		}
+		inProgressCheck(userStatus)
+		pwdCheck(userStatus)
 		if len(os.Args) != 3 {
 			fmt.Printf("A flag number must be supplied when capturing a flag.\n")
 			//printUsage()
@@ -128,11 +100,7 @@ func main() {
 		}
 	case "submit":
 		// TODO: necessary checks
-		if userStatus.CurrentLab == "" {
-			fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
-			fmt.Printf("\n\tlab start <lab number>\n\n")
-			os.Exit(1)
-		}
+		inProgressCheck(userStatus)
 		lab := ulab.OpenLabFile(userStatus.CurrentLab)
 		labSubmit(userStatus, lab)
 	case "score":
@@ -310,4 +278,20 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 
 func printLabStatus(s *ulab.Status) {
 	fmt.Printf("Printing lab status")
+}
+
+func pwdCheck(s *ulab.Status) {
+	if os.Getenv("PWD") != s.LastPWD {
+		fmt.Printf("You are not in the correct directory to continue this lab\n\n")
+		fmt.Printf("Please 'cd' to %s\n", s.LastPWD)
+		os.Exit(2)
+	}
+}
+
+func inProgressCheck(s *ulab.Status) {
+	if s.CurrentLab == "" {
+		fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
+		fmt.Printf("\n\tlab start <lab number>\n\n")
+		os.Exit(1)
+	}
 }
