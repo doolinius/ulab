@@ -98,6 +98,7 @@ func (s *Status) ScoreReport(labNum string) {
 	fmt.Printf("Questions answered: %d/%d\n", numCorrect, numQuestions)
 	fmt.Printf("       Bonus Flags: %d/%d\n", numBonusFlags, result.TotalBonusFlags)
 	fmt.Printf("       Total Score: %d/%d\n", score, numTotalSteps+result.TotalFlags+result.TotalQuestions)
+	fmt.Printf("\nSubmission Code: %s\n", result.SubmissionCode)
 }
 
 func (s *Status) FullResults() {
