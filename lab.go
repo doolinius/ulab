@@ -10,6 +10,7 @@ import (
 type StepTest struct {
 	TestType  string `json:"testType"`
 	Command   string `json:"command"`
+	Value     string `json:"value"`
 	Condition bool   `json:"condition"` // do we test for true/pass or false/fail?
 }
 
@@ -65,6 +66,15 @@ func (l *Lab) PrintSteps(s *Status) {
 func (l *Lab) Check(step int) bool {
 	test := l.Steps[step].Test
 	switch test.TestType {
+	case "checkvar":
+		val := os.Getenv(test.Command)
+		if val == test.Value && test.Condition == true {
+			fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
+			return true
+		} else {
+			fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
+			return false
+		}
 	case "script":
 		// execute check command
 		cmdPath := ULConfig.Root + "/labs/" + l.Number + "/scripts/" + test.Command
@@ -83,7 +93,7 @@ func (l *Lab) Check(step int) bool {
 	case "command":
 		// execute check command
 		//fmt.Printf("Running command %s...\n", test.Command)
-		_, err := exec.Command("sh", "-c", test.Command).Output()
+		_, err := exec.Command("bash", "-c", test.Command).Output()
 		switch {
 		case (err != nil && test.Condition == true), (err == nil && test.Condition == false):
 			fmt.Printf("%v\n", err)

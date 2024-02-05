@@ -188,8 +188,9 @@
                 "export PS1=\"(\\u) -> \" (there is a space at the end before the \""
             ],
             "test": {
-                "testType": "command",
-                "command": "/opt/ulab/labs/3-3/scripts/ps1.sh",
+                "testType": "checkvar",
+                "command": "PS1",
+                "value":"(\\u) -> ",
                 "condition": true
             },
             "tips": "Make sure you enter the command exactly as above, including spaces.",
