@@ -223,8 +223,8 @@ Available subcommands:
     check          Checks the success of the current step in a lab
     flag <flag #>  Captures a numeric flag discovered in the lab
     submit         Submits the lab for grading
-	restart        Restarts a lab in progress
-	score <lab id> Show the final score of a submitted lab
+    restart        Restarts a lab in progress
+    score <lab id> Show the final score of a submitted lab
     help           Show this usage screen
 `
 	fmt.Println(out)
