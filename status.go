@@ -125,6 +125,7 @@ func (s *Status) Submit(lab *Lab) {
 		t.Hour(), t.Minute())
 	result.SubmissionCode = s.submissionCode(result.FinishTime)
 	fmt.Printf("\n\tSubmission Code: %s\n\n", result.SubmissionCode)
+	fmt.Printf("\n\tTo submit this lab in Brightspace, copy and Paste this code into the Assignment submission text field.")
 	s.CurrentLab = ""
 	s.CurrentStep = -1
 	s.Save()
