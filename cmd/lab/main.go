@@ -30,6 +30,35 @@ func main() {
 	}
 
 	switch os.Args[1] {
+	case "restart":
+		inProgressCheck(userStatus)
+		// make sure user in HOME directory
+		if os.Getenv("PWD") != os.Getenv("HOME") {
+			fmt.Printf("Labs must be restarted in your HOME directory. Please 'cd' to your home directory and try again.\n\n")
+			os.Exit(1)
+		}
+		// Are you sure prompt
+		answer := yesOrNo("WARNING: By restarting this lab, you will erase all current progress, including all steps and flags, and begin from the start.\n\n\tAre you sure? ")
+		if answer == "no" {
+			os.Exit(1)
+		} else {
+			fmt.Printf("Restarting lab %s...", userStatus.CurrentLab)
+		}
+
+		// delete lab data files
+		_, err := os.Stat("lab_data")
+		if os.IsNotExist(err) {
+			fmt.Printf("Lab data folder does not exist.")
+			os.Exit(1)
+		}
+		fmt.Printf("Removing lab data files...\n")
+		rmerr := os.RemoveAll("lab_data/")
+		if rmerr != nil {
+			fmt.Printf("Error removing lab data files: %v\n", rmerr)
+		}
+
+		// start lab
+		labStart(userStatus.CurrentLab, user, userStatus)
 	case "start":
 		if len(os.Args) != 3 {
 			fmt.Printf("A lab number must be supplied when starting a new lab.\n")
@@ -46,6 +75,22 @@ func main() {
 		if os.Getenv("PWD") != os.Getenv("HOME") {
 			fmt.Printf("Labs should always be started in your HOME directory. Please 'cd' to your home directory and try again.\n\n")
 			os.Exit(1)
+		}
+
+		curLabNum, labInProgress := userStatus.InProgress()
+		if labInProgress {
+			answer := ""
+			fmt.Printf("Lab %s appears to be in progress. ", curLabNum)
+			// printLabStatus(user)
+			fmt.Printf("\nYou must submit this lab before starting a new one.\n")
+			submitPrompt := fmt.Sprintf("Would you like to submit Lab %s before starting the new one?", curLabNum)
+			answer = yesOrNo(submitPrompt)
+			if answer == "yes" {
+				lab := ulab.OpenLabFile(curLabNum)
+				labSubmit(userStatus, lab)
+			} else {
+				os.Exit(1)
+			}
 		}
 
 		labStart(os.Args[2], user, userStatus)
@@ -178,6 +223,7 @@ Available subcommands:
     check          Checks the success of the current step in a lab
     flag <flag #>  Captures a numeric flag discovered in the lab
     submit         Submits the lab for grading
+	restart        Restarts a lab in progress
 	score <lab id> Show the final score of a submitted lab
     help           Show this usage screen
 `
@@ -231,21 +277,6 @@ func yesOrNo(prompt string) string {
 func labStart(labNum string, u *user.User, s *ulab.Status) {
 	//fmt.Printf("Attempting to start Lab %s\n", labNum)
 	// check to see if lab number exists
-	curLabNum, labInProgress := s.InProgress()
-	if labInProgress {
-		answer := ""
-		fmt.Printf("Lab %s appears to be in progress. ", curLabNum)
-		// printLabStatus(user)
-		fmt.Printf("\nYou must submit this lab before starting a new one.\n")
-		submitPrompt := fmt.Sprintf("Would you like to submit Lab %s before starting the new one?", curLabNum)
-		answer = yesOrNo(submitPrompt)
-		if answer == "yes" {
-			lab := ulab.OpenLabFile(curLabNum)
-			labSubmit(s, lab)
-		} else {
-			os.Exit(1)
-		}
-	}
 
 	// Go on with starting lab
 	// Open lab file
