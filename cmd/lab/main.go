@@ -67,8 +67,13 @@ func main() {
 		}
 		//fmt.Printf("Starting Lab %s\n", os.Args[2])
 		if userStatus.LabComplete(os.Args[2]) {
-			fmt.Printf("This lab has already been submitted.\n")
-			os.Exit(1)
+			fmt.Printf("This lab has already been submitted. If you start this lab again, you will ERASE your previous submission and begin a new one.\n\n")
+			answer := yesOrNo("Are you sure you want to start a new attempt? ")
+			if answer == "no" {
+				os.Exit(1)
+			} else {
+				fmt.Printf("\nErasing prior attempt and starting lab...\n\n")
+			}
 		}
 
 		// make sure user in HOME directory
@@ -98,7 +103,7 @@ func main() {
 	case "status":
 		// TODO: necessary checks
 		inProgressCheck(userStatus)
-		pwdCheck(userStatus)
+		//pwdCheck(userStatus)
 		lab := ulab.OpenLabFile(userStatus.CurrentLab)
 		lab.PrintSteps(userStatus)
 	case "current":
