@@ -115,7 +115,7 @@
             ],
             "test": {
                 "testType": "command",
-                "command": "test",
+                "command": "true",
                 "condition": true
             },
             "tips": "'tryme' is just a test program written for this lab, it is not a real Unix command. You will also need to enter YOUR password for 'sudo', NOT the root password. You may also see a warning about using 'sudo' responsibly.",
