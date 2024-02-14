@@ -1,0 +1,142 @@
+{
+    "number": "4-1",
+    "name": "Users and Groups",
+    "description": "Users and Groups are a fundamental part of the Unix security model. This concept has made its way to most modern operating systems as well. Even on desktop systems, the concept of users and groups is important, but for working with Unix server systems, it is essential. This lab will give some insight to how Unix systems implement and work with users and groups, as well as some important commands and tasks.",
+    "dataFiles": false,
+    "submitMessage":"",
+    "steps": [
+        {
+            "text": "First, let's take a look at your own user identity.",
+            "tasks": [
+                "id"
+            ],
+            "tips": "Without any arguments, this command will show you your own username, numeric ID, and the names and IDs of all groups of which you are a member.",
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "successMessage": "Good, this is a useful command for ensuring that your user account is a member of the correct group, or to occasionally obtain your numeric user ID should you ever need it.",
+            "retryMessage": "Should not fail.",
+            "question": {
+                "type":"MC",
+                "text":"You are a member of multiple groups. What do you think is the most likely purpose for the cit220 group?",
+                "options":["for playing games", "to access the lab software", "for in-class demonstration examples", "for remote access to the system"],
+                "correct":[2],
+                "feedback":"You got it! Only CIT220 students are able to run the 'lab' program on this system, and a group was created specifically for this."
+            }
+        },
+        {
+            "text":"Now view get the same id information for the user 'lsanborn', which is a test user account on this system. This time we'll pass a username to the 'id' command.",
+            "tasks": ["id lsanborn"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "",
+            "successMessage": "This user will have a different id number, and different group membership.",
+            "retryMessage": "I'm not sure why this would fail.",
+            "question": {
+                "type":"NUM",
+                "text":"What is lsanborn's user ID/uid?",
+                "options":[],
+                "correct":[1030],
+                "feedback":"Correct! On most modern Unix systems, login user ID numbers are 1000 and up."
+            }
+        },
+        {
+            "text":"As we saw in an earlier lab, every Unix login account gets their own 'home' directory. These are most often in the /home directory. Let's take a look at a few listings.",
+            "tasks": ["ls -l /home", "ls -l /home/lsanborn"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "The first 'ls' command will show you a list of all user home directories in /home. The second will attempt to show you what is inside Lois Sanborn's home directory.",
+            "successMessage": "So, it would seem that you cannot see inside Lois Sanborn's home directory. On many Unix systems, home directories, by default, cannot be viewed by any user other than root.",
+            "retryMessage": "I'm not sure why this would fail."
+        },
+        {
+            "text":"User account information is stored in a plain text file called /etc/passwd (not a typo). Each line contains a single user entry, which includes the username, user id number, primary group number, comment, home directory and default shell. First, you'll look at the file with 'less', then filter it to view one entry.",
+            "tasks": ["less /etc/passwd", "cat /etc/passwd | grep lsanborn"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "Remember to use 'q' to exit 'less'. The second command will use a pipe to filter out all lines except the 'lsanborn' entry.",
+            "successMessage": "This is a perfect example of how Unix uses plain text files to store configuration data.",
+            "retryMessage": "Should not fail.",
+            "question": {
+                "type":"MC",
+                "text":"Which shell is Lois Sanborn using?",
+                "options":["bash", "csh", "zsh", "fish"],
+                "correct":[3],
+                "feedback":"Right on. Every user can change their shell by using 'usermod -s /usr/bin/zsh' (replace /usr/bin/zsh with the path to the user's preferred shell)."
+            }
+        },
+        {
+            "text":"Filter the /etc/passwd file again, this time by grepping for 'nologin', but first, read the man page for 'nologin'. Press 'q' to exit the man page.",
+            "tasks": ["man nologin", "cat /etc/passwd | grep nologin"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "",
+            "successMessage": "These accounts have 'nologin' for a shell, so instead of getting a command prompt, the user will be politely told that they cannot log into the system with this account.",
+            "retryMessage": "The 'english_paper.docx' file does not seem to be in the 'documents' directory. Please check your spelling and try again.",
+            "question": {
+                "type":"MC",
+                "text":"What type of accounts usually make use of the 'nologin' shell?",
+                "options":["system", "root", "normal", "student"],
+                "correct":[1],
+                "feedback":"Correct. Unix system accounts exist only for running secure processes, and never for direct logins."
+            }
+        },
+        {
+            "text":"Unix has a strong boundary between the 'root', administrator user, and the other user accounts. 'root' is used for system setup and configuration tasks, such as creating new users and installing software. Normal or 'unprivileged' users cannot perform these tasks. Let's try something that only root can do: install software with the 'dnf' command.",
+            "tasks": ["dnf install unrar"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "'dnf' is a RedHat/Fedora/CentOS command for installing software. This command would install the 'unrar' utility for extracting RAR files.",
+            "successMessage": "As you can see, only the 'root' user can install software.",
+            "retryMessage": "Should not fail."
+        },
+        {
+            "text":"The 'sudo' utility allows an unprivileged user to run a command as root. Your user account must still be given permission to run commands with 'sudo', so this may not work on all systems.",
+            "tasks": [
+                "tryme",
+                "sudo tryme"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "test",
+                "condition": true
+            },
+            "tips": "'tryme' is just a test program written for this lab, it is not a real Unix command. You will also need to enter YOUR password for 'sudo', NOT the root password. You may also see a warning about using 'sudo' responsibly.",
+            "successMessage": "Great job. On this system, 'sudo' was configured so that any member of the 'cit220' group is able to execute the 'tryme' program as the root user.",
+            "retryMessage": "Should not fail."
+        },
+        {
+            "text":"One last step. Though it is less common now, it is possible to set up a local email system for Unix systems, so that users on the system can email each other, though not anything outside the system. For this last step, you will send your instructor an email on the command line.",
+            "tasks": [
+                "echo \"Finished with Lab 4-1\" | mail -s \"Lab Complete\" jdoolin@thompson"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "Note that this command makes use of echo to print the email body, and pipes the message to the 'mail' command to send it. The -s flag is for the email subject.",
+            "successMessage": "Well done. This is local email only, however. You cannot send email outside this system, such as to a gmail or wvncc address. But you can email any user on this system by using username@thompson. You can also compose, send and check your thompson email by using the command 'alpine'. Try it out!",
+            "retryMessage": "Should not fail."
+        }
+    ],
+    "flags": [4335, 8400, 2467],
+    "bonusFlags": [7533]
+}
