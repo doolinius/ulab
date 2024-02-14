@@ -47,13 +47,16 @@
         },
         {
             "text":"As we saw in an earlier lab, every Unix login account gets their own 'home' directory. These are most often in the /home directory. Let's take a look at a few listings.",
-            "tasks": ["ls -l /home", "ls -l /home/lsanborn"],
+            "tasks": [
+                "ls -l /home", 
+                "ls -l /home/lsanborn      (this will fail)"    
+            ],
             "test": {
                 "testType": "command",
                 "command": "true",
                 "condition": true
             },
-            "tips": "The first 'ls' command will show you a list of all user home directories in /home. The second will attempt to show you what is inside Lois Sanborn's home directory.",
+            "tips": "The first 'ls' command will show you a list of all user home directories in /home. The second will attempt to show you what is inside Lois Sanborn's home directory, but will fail.",
             "successMessage": "So, it would seem that you cannot see inside Lois Sanborn's home directory. On many Unix systems, home directories, by default, cannot be viewed by any user other than root.",
             "retryMessage": "I'm not sure why this would fail."
         },
