@@ -1,0 +1,21 @@
+5 Report permissions (5 questions)
+600
+755
+644
+440
+751
+
+
+5 permissions settings (testable)
+-read/write, user
+-read/write, read group cit220
+-read/write, read/write group cit220 
+-read/write, read group cit220, read 
+-executable program
+
+Flags
+-executable
+-one of the files
+
+Bonus Flags
+-second executable

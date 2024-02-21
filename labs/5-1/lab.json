@@ -1,0 +1,217 @@
+{
+    "number": "5-1",
+    "name": "Unix Permissions",
+    "description": "On any operating system, file, folder and device permissions are a critical part of Access Control, which is fundamental to Information Security. In this lab, you will get practice reading and setting Unix permissions.",
+    "dataFiles": true,
+    "submitMessage":"",
+    "steps": [
+        {
+            "text": "This lab has extracted a folder of data files in your home directory. You need to change to this directory (remember that 'directory' and 'folder' mean the same thing).",
+            "tasks": [
+                "[change to lab_data directory]"
+            ],
+            "tips": "",
+            "test": {
+                "testType": "script",
+                "command": "cd.sh",
+                "condition": true
+            },
+            "successMessage": "Great, you're in the lab_data directory.",
+            "retryMessage": "Hmmm... Looks like you're in the wrong directory. You should start all labs from your home directory. Type 'ls' to make sure the 'lab_data' directory is there. Type 'pwd' to see if you are in your home directory."
+        },
+        {
+            "text":"The first section of this lab will be reporting the three digit, numeric permissions modes for several files. This will be done as a series of questions. If you are unsure about how to determine the numeric mode based on a file listing, please revisit the course materials before continuing.\n\nFirst, let's look at the permissions for the file 'secrets.zip'",
+            "tasks": ["ls -l secrets.zip"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "",
+            "successMessage": "This file has read and write permissions for the user, but nothing else. This is common for files that a user wishes to keep strictly confidential.",
+            "retryMessage": "I'm not sure why this would fail.",
+            "question": {
+                "type":"NUM",
+                "text":"What is the three digit permission mode for this file?",
+                "options":[],
+                "correct":[600],
+                "feedback":"Excellent, 600 is correct. Read is 4, plus 2 for write, but zero for execute is 6. The group and everyone else have no permissions at all."
+            }
+        },
+        {
+            "text":"The next file, 'team_notes.txt', represents a file that a development team leader may keep on a project.",
+            "tasks": ["ls -l team_notes.txt"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "",
+            "successMessage": "This file has read and write permissions for the user, and anyone who is in the group may read it, but only read it.",
+            "retryMessage": "I'm not sure why this would fail.",
+            "question": {
+                "type":"NUM",
+                "text":"What is the three digit permission mode for this file?",
+                "options":[],
+                "correct":[640],
+                "feedback":"Excellent, 640 is correct. The 6 is the same as the first question, but in this case, the group permissions is 4, since read => 4, and there is no write or execute for the group."
+            }
+        },
+        {
+            "text":"On to 'tutorial.docx'. This file represents a document that could be readable by everyone on the system, perhaps as a tutorial for some software or process.",
+            "tasks": ["ls -l tutorial.docx"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "",
+            "successMessage": "For this file, read permissions have been extended to the 'everyone else' user class, so that everyone on the system can read this tutorial document.",
+            "retryMessage": "Should not fail.",
+            "question": {
+                "type":"NUM",
+                "text":"What is the three digit permission mode for this file?",
+                "options":[],
+                "correct":[644],
+                "feedback":"Excellent, 644 is correct. The 'everyone else' permissions are the same as the group owner."
+            }
+        },
+        {
+            "text":"Now it's time for the 'script.sh' file. Files with the .sh extension are Unix shell scripts, which are often set to be executable programs.",
+            "tasks": ["ls -l script.sh", "./script.sh"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "The second command will run the shell script as a program.",
+            "successMessage": "Good job. You can run programs that are in your present working directory by using './program_name', just like with this one.",
+            "retryMessage": "Should not fail.",
+            "question": {
+                "type":"NUM",
+                "text":"What is the three digit permission mode for this file?",
+                "options":[],
+                "correct":[755],
+                "feedback":"Excellent, 755 is correct. This means that everyone on the system can read and execute this file (proper execution requires the read permisssion). Only the user that owns the file can update it however. This is very common for system installed programs on Unix, where root owns the file, but everyone can execute it."
+            }
+        },
+        {
+            "text":"Ok, now let's have a look at the directory, 'department_forms'.",
+            "tasks": ["ls -l"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "This directory is empty. This command will also show you the permissions for all the files. If you used 'ls -l department_forms', it would attempt to list the contents of the directory instead, which is not what we want. We want to see its permissions.",
+            "successMessage": "One of the key components of directories is the execute permission. This allows a user to cd or move into that directory and view the file details.",
+            "retryMessage": "Should not fail.",
+            "question": {
+                "type":"NUM",
+                "text":"What is the three digit permission mode for this file?",
+                "options":[],
+                "correct":[751],
+                "feedback":"Excellent, 751 is correct. This is a rare setting. This means that the user has full access to the directory. The group can read the list of files, cd to the directory and view file details. The Everyone Else class can only execute. This has the strange property of a user being able to create and read a file in that directory, without being able to see anything else in it."
+            }
+        },
+        {
+            "text":"The rest of the steps will require that you set the permissions of some files. All of these files are currently set to 000, which means nobody has any permissions of any sort.\n\nLet's start with 'for_my_eyes_only.txt'. For this file, set the permissions so that the user can read, but not write or execute. Leave group and everyone else at 0 (no permissions). \n\nWhere it says [mode], you must supply the three digit permissions mode",
+            "tasks": [
+                "chmod <mode> for_my_eyes_only.txt"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "checkperm.sh perm for_my_eyes_only.txt -r--------",
+                "condition": true
+            },
+            "tips": "Again, where it says <mode>, you must substitute the three digit permissions mode without the angle (<>) brackets.",
+            "successMessage": "Great job. The permissions are correct.",
+            "retryMessage": "Double check your chmod syntax or the permissions mode. Remember that it is read only, and only for the user."
+        },
+        {
+            "text":"Next we'll modify the permissions for the file 'cit220_only.txt'. For this one, the user should have read and write acccess, and the group cit220 will have read access only. Everyone else will have zero permissions to the file.  This will require a 'chgrp' and a 'chmod'.",
+            "tasks": [
+                "[change group ownership of 'cit220_only.txt' to 'cit220']",
+                "[use chmod to set permissions for cit220_only.txt as stated above]"
+            ],
+            "test": {
+                "testType": "script",
+                "command": "checkperm.sh pg cit220_only.txt -rw-r-----cit220",
+                "condition": true
+            },
+            "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps or other course materials if you like.",
+            "successMessage": "Great job. The permissions are correct.",
+            "retryMessage": "Double check your chmod syntax or the permissions mode."
+        },
+        {
+            "text":"Now for the file 'cit220_wiki.txt'. This could be a file that anyone in the 'cit220' group can both read and write to, and anyone can read. So the user should have read and write acccess, the group cit220 will have read and write access. Everyone else will have read only.  This will require a 'chgrp' and a 'chmod'.",
+            "tasks": [
+                "[change group ownership of 'cit220_wiki.txt' to 'cit220']",
+                "[use chmod to set permissions for cit220_wiki.txt as stated above]"
+            ],
+            "test": {
+                "testType": "script",
+                "command": "checkperm.sh pg cit220_only.txt -rw-rw-r--cit220",
+                "condition": true
+            },
+            "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps or other course materials if you like.",
+            "successMessage": "Great job. The permissions are correct.",
+            "retryMessage": "Double check your chmod syntax or the permissions mode.",
+            "question": {
+                "type":"MC",
+                "text":"Which of the following commands can also be used to change group ownership?",
+                "options":["chown", "chmod", "usermod", "gpasswd"],
+                "correct":[1],
+                "feedback":"Correct. You can use 'chown :groupname filename' to change group ownership of a file."
+            }
+        },
+        {
+            "text":"Now for the file 'open_book.txt'. This could be a file that anyone on the system can read, but only the user can write to it. So the user should have read and write acccess, the group will have read only. Everyone else will have read only.",
+            "tasks": [
+                "[use chmod to set permissions for open_book.txt as stated above]"
+            ],
+            "test": {
+                "testType": "script",
+                "command": "checkperm.sh pg open_book.txt -rw-r--r--",
+                "condition": true
+            },
+            "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps or other course materials if you like.",
+            "successMessage": "Great job. The permissions are correct.",
+            "retryMessage": "Double check your chmod syntax or the permissions mode."
+        },
+        {
+            "text":"The file 'run_me.sh' is a shell script that can be run as a program. This means it will need to be executable. However, to execute a program, a user must also be able to read it Set this script to be executable and readable by the user, group and everyone else, but writeable only by the user.",
+            "tasks": [
+                "[use chmod to set permissions for run_me.sh as stated above]",
+                "./run_me.sh"
+            ],
+            "test": {
+                "testType": "script",
+                "command": "checkperm.sh perm run_me.sh -rwxr-xr-x",
+                "condition": true
+            },
+            "tips": "The second command will run the shell script as a program, provided that the permissions are set correctly.",
+            "successMessage": "Great job. The permissions are correct.",
+            "retryMessage": "Double check your chmod syntax or the permissions mode.."
+        },
+        {
+            "text":"To finish this lab, we'll go back to your home directory and remove the files that were extracted for this lab.",
+            "tasks": [
+                "cd",
+                "rmdir lab_data",
+                "rm -rf lab_data",
+                "ls"
+            ],
+            "test": {
+                "testType": "script",
+                "command": "finish.sh",
+                "condition": true
+            },
+            "tips": "When you use the 'cd' command without giving it the name of a directory, it simply takes you back to your home directory. Note that the 'rmdir' command WILL FAIL, and the error will show you why. The next 'rm' command should work.",
+            "successMessage": "Ok, it looks like you've removed all of the lab files and have finished. Very good.",
+            "retryMessage": "You may have missed something. You are either in the wrong directory, or the lab_data directory has not yet been removed."
+        }
+    ],
+    "flags": [1111, 5599],
+    "bonusFlags": [8338]
+}
