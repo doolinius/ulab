@@ -11,7 +11,7 @@ case $part in
 	perm) got=`echo ${data} | cut -d ' ' -f 1`;;
 	user) got=`echo ${data} | cut -d ' ' -f 3`;;
 	group) got=`echo ${data} | cut -d ' ' -f 4`;;
-	pg) got=`echo ${data} | awk '{print($1 $4);}'`
+	pg) got=`echo ${data} | awk '{print($1 $4);}'`;;
 	*) echo "WTF?";;
 esac
 

@@ -121,7 +121,7 @@
             ],
             "test": {
                 "testType": "command",
-                "command": "checkperm.sh perm for_my_eyes_only.txt -r--------",
+                "command": "/opt/ulab/labs/5-1/scripts/checkperm.sh perm for_my_eyes_only.txt -r--------",
                 "condition": true
             },
             "tips": "Again, where it says <mode>, you must substitute the three digit permissions mode without the angle (<>) brackets.",
@@ -135,8 +135,8 @@
                 "[use chmod to set permissions for cit220_only.txt as stated above]"
             ],
             "test": {
-                "testType": "script",
-                "command": "checkperm.sh pg cit220_only.txt -rw-r-----cit220",
+                "testType": "command",
+                "command": "/opt/ulab/labs/5-1/scripts/checkperm.sh pg cit220_only.txt -rw-r-----cit220",
                 "condition": true
             },
             "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps or other course materials if you like.",
@@ -150,8 +150,8 @@
                 "[use chmod to set permissions for cit220_wiki.txt as stated above]"
             ],
             "test": {
-                "testType": "script",
-                "command": "checkperm.sh pg cit220_only.txt -rw-rw-r--cit220",
+                "testType": "command",
+                "command": "/opt/ulab/labs/5-1/scripts/checkperm.sh pg cit220_wiki.txt -rw-rw-r--cit220",
                 "condition": true
             },
             "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps or other course materials if you like.",
@@ -171,8 +171,8 @@
                 "[use chmod to set permissions for open_book.txt as stated above]"
             ],
             "test": {
-                "testType": "script",
-                "command": "checkperm.sh pg open_book.txt -rw-r--r--",
+                "testType": "command",
+                "command": "/opt/ulab/labs/5-1/scripts/checkperm.sh perm open_book.txt -rw-r--r--",
                 "condition": true
             },
             "tips": "You have to figure out the commands yourself here. You can refer to the commands from previous steps or other course materials if you like.",
@@ -186,8 +186,8 @@
                 "./run_me.sh"
             ],
             "test": {
-                "testType": "script",
-                "command": "checkperm.sh perm run_me.sh -rwxr-xr-x",
+                "testType": "command",
+                "command": "/opt/ulab/labs/5-1/scripts/checkperm.sh perm run_me.sh -rwxr-xr-x",
                 "condition": true
             },
             "tips": "The second command will run the shell script as a program, provided that the permissions are set correctly.",
