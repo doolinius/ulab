@@ -140,3 +140,21 @@ Questions
 	"correct":[4,2,1,3],
 	"feedback"
 }
+
+Text elements/formatting
+
+Lab Intro - number, name and description
+
+Step number and text, tasks (lab current)
+
+Lab Status
+
+Success and message or Fail and message 
+
+Flag and Bonus Flag success and fail
+
+Lab end 
+
+Lab submit
+
+Lab score
