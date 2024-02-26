@@ -1,0 +1,164 @@
+{
+    "number": "6-1",
+    "name": "Unix Package Management",
+    "description": "Most modern Unix systems use Package Management tools for installing, removing, updating and otherwise managing software. Thompson is a CentOS Linux system that uses the 'dnf/yum' package system found on most RedHat based Linux distributions. In this lab you will get practice performing some software querying commands using the 'dnf' tool.",
+    "dataFiles": false,
+    "submitMessage":"",
+    "steps": [
+        {
+            "text": "Unix package managers will automatically download software from official 'repositories' for the OS or distribution. This server uses a few of the official RedHat and CentOS repositories. These 'repos' can have quite a few packages availabe. How many? Well let's check what is available for thompson. We'll pipe the output to 'wc -l' to count the number of packages instead of viewing the list.",
+            "tasks": [
+                "dnf list | wc -l"
+            ],
+            "tips": "HEADS UP! This command may take a minute to run, as it may have to refresh package listings.",
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "successMessage": "That's quite a bit isn't it?",
+            "retryMessage": "Should not fail.",
+            "question":{
+                "type":"MC",
+                "text":"How many packages are available?",
+                "options":["less than 500", "between 500 and 1,000", "between 5,000 and 10,000", "over 20,000"],
+                "correct":[4],
+                "feedback":"It is not unusual for the numbers of available packages to number in the tens of thousands, most of which are open source."
+            }
+        },
+        {
+            "text":"This time we'll list only the *installed* packages by piping to less instead. of 'wc'. Have a look through the list, paging down until you reach the bottom. Remember to press 'q' to exit less.",
+            "tasks": ["dnf list installed | less"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "We have slightly modified the previous command so that instead of listing all available packages, it is only the ones installed on thompson.",
+            "successMessage": "Good job. A Linux system is composed of quite a few packages, isn't it?",
+            "retryMessage": "I'm not sure why this would fail."
+        },
+        {
+            "text":"One of the more frequent tasks in software managing is to see if a package exists for some particular software project, or to see all packages that contain some part of a name. Let's try searching for a package. In this case, we'll look for the very popular open source audio recording and editing software, 'audacity'.",
+            "tasks": ["dnf search audacity"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "dnf search <search text> will show any packages that contain the search text as part of its name. Sometimes you have to refine your search if you get too many results.",
+            "successMessage": "Very good. All package managers have the ability to search for packages.",
+            "retryMessage": "I'm not sure why this would fail.",
+            "question":{
+                "type":"TF",
+                "text":"Is it possible to install 'audacity'? (Was the audacity package found)?",
+                "options":[],
+                "correct":[1],
+                "feedback":"'dnf' listed audacity in the results, along with version number and a little other info."
+            }
+        },
+        {
+            "text":"Ok, let's see if you can insteall the 'steam' video game service and software.",
+            "tasks": ["dnf search steam"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "",
+            "successMessage": "Hmm... the results here look different, don't they?",
+            "retryMessage": "Should not fail.",
+            "question": {
+                "type":"TF",
+                "text":"Is it possible to install 'steam' on thompson?",
+                "options":[],
+                "correct":[0],
+                "feedback":"Correct. However, it is possible to install 'steam' on most desktop distributions, such as Debian, Ubuntu, Fedora, Pop!OS and others. CentOS is primarily a server distro."
+            }
+        },
+        {
+            "text":"It can be useful to get more information and details about an available or installed package. In this case, we use 'dnf info'. This will get the details for the 'golang' package, which installs the Go programming language that was used to build this lab software.",
+            "tasks": ["dnf info golang"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "",
+            "successMessage": "This shows some very useful information, including the size of the software, a description, the URL for the software project, version number and more.",
+            "retryMessage": "Should not fail.",
+            "question":{
+                "type":"MC",
+                "text":"Which version of Go is in the repository? (you can ignore the third part of the version number)",
+                "options":["4.1", "1.21", "0.8", "42.2"],
+                "correct":[2],
+                "feedback":"You may find that different versions of packages are available in different operating systems or distributions. Some distros allow installing 'bleeding edge' versions for the newest features, while others focus more on providing slightly older, but well known and stable versions."
+            }
+        },
+        {
+            "text":"Another useful task is to see which package provides a particular command or file. You can use this for any file on the system, and if it was installed by a package, it will show you which one. Let's try that with a very basic command, 'mkdir'. Which package did that come from?",
+            "tasks": ["dnf whatprovides /usr/bin/mkdir"],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "You may see multiple results here, but these are usually just different versions of the same package.",
+            "successMessage": "Good, you can see multiple results here because there are multiple versions in the repos.",
+            "retryMessage": "Should not fail.",
+            "question": {
+                "type":"MC",
+                "text":"Which of the following packages provides the 'mkdir' program?",
+                "options":["dirtools", "cmdprogs", "coreutils", "filemgr"],
+                "correct":[3],
+                "feedback":"On most Linux systems, 'coreutils' provides the fundamental OS 'utilities', usually the GNU utilities."
+            }
+        },
+        {
+            "text":"Now let's see all of the files that are provided by 'coreutils'. We're going to do this twice. The first time shows every single file, but the second one will show only the actual utility binaries provided by the package..",
+            "tasks": [
+                "dnf repoquery -l coreutils",
+                "dnf repoquery -l coreutils | grep /usr/bin | sort | uniq"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "",
+                "condition": true
+            },
+            "tips": "The second command is piped through grep to filter out the binaries, but they are printed multiple times, so piping to sort and unique removes the duplicates.",
+            "successMessage": "Good, the organization is getting better.",
+            "retryMessage": "Should not fail.",
+            "question": {
+                "type":"TF",
+                "text":"Is the 'wc' command provided by coreutils?",
+                "options":[],
+                "correct":[1],
+                "feedback":"Many of the simple programs we have been using are part of coreutils, including ls, cp, mkdir, rm, sort, uniq, grep and wc."
+            }
+        },
+        {
+            "text":"Lastly, we're going to use a 'cheat sheet' to see how to use 'dnf' to install a program. 'cheat' is a useful tool that is NOT part of the coreutils, and must be installed separately. It is similar in concept to 'man' pages, but gets right to the point by showing specific examples of common tasks. First you will install 'cheat', then use it to see the cheatsheet for 'dnf'.",
+            "tasks": [
+                "cheat     (answer 'y' to both questions to install the cheatsheets)",
+                "cheat dnf"
+            ],
+            "test": {
+                "testType": "command",
+                "command": "true",
+                "condition": true
+            },
+            "tips": "You can even edit and create your own cheatsheets! This is a very useful tool that can help both new and experienced Unix users.",
+            "successMessage": "Excellent, you should see a few examples of how to use 'dnf'.",
+            "retryMessage": "Should not fail.",
+            "question": {
+                "type":"MC",
+                "text":"Which command would you use to install a package?",
+                "options":["dnf install <package>", "dnf get <package>", "dnf setup <package>", "dnf download <package>"],
+                "correct":[1],
+                "feedback":"DNF is just one of several Unix package management systems. Others include 'apt', 'pacman' and the BSD 'pkg' systems. It is important to learn the package management system of whichever OS you are using."
+            }
+        }
+    ],
+    "flags": [],
+    "bonusFlags": []
+}

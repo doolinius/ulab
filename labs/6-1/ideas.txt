@@ -1,0 +1,9 @@
+list all installed packages (MC q) > 20000, between 5000 and 10000, between 500 and 1000, just under 400
+list all installed packages
+package search exists (q) true/false
+package search does not exist (q) true/false
+package info golang (q) which version 
+which package provides (MC q) mkdir
+which files are provided by unzip (q) true/false 
+install cheat, run cheat (MC q) 
+lab submit
