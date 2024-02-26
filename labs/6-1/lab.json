@@ -27,7 +27,7 @@
             }
         },
         {
-            "text":"This time we'll list only the *installed* packages by piping to less instead. of 'wc'. Have a look through the list, paging down until you reach the bottom. Remember to press 'q' to exit less.",
+            "text":"This time we'll list only the *installed* packages by piping to less instead of 'wc'. Have a look through the list, paging down until you reach the bottom. Remember to press 'q' to exit less.",
             "tasks": ["dnf list installed | less"],
             "test": {
                 "testType": "command",
@@ -125,7 +125,7 @@
                 "command": "",
                 "condition": true
             },
-            "tips": "The second command is piped through grep to filter out the binaries, but they are printed multiple times, so piping to sort and unique removes the duplicates.",
+            "tips": "HEADS UP! You will probably need to run 'lab current' after the output of the first command.",
             "successMessage": "Good, the organization is getting better.",
             "retryMessage": "Should not fail.",
             "question": {
@@ -137,7 +137,7 @@
             }
         },
         {
-            "text":"Lastly, we're going to use a 'cheat sheet' to see how to use 'dnf' to install a program. 'cheat' is a useful tool that is NOT part of the coreutils, and must be installed separately. It is similar in concept to 'man' pages, but gets right to the point by showing specific examples of common tasks. First you will install 'cheat', then use it to see the cheatsheet for 'dnf'.",
+            "text":"Lastly, we're going to use a 'cheat sheet' to see how to use 'dnf' to install a program. 'cheat' is a useful tool that is NOT part of the coreutils, and must be installed separately. It is similar in concept to 'man' pages, but gets right to the point by showing specific examples of common tasks. First you will create a config file and download the cheatsheets for 'cheat', then use it to see the cheatsheet for 'dnf'.",
             "tasks": [
                 "cheat     (answer 'y' to both questions to install the cheatsheets)",
                 "cheat dnf"
