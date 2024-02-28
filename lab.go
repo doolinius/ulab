@@ -60,13 +60,34 @@ func (l *Lab) PrintSteps(s *Status) {
 	pterm.DefaultCenter.Printf("Flags: %d/%d\nBonus Flags: %d/%d", len(results.Flags), len(l.Flags), len(results.BonusFlags), len(l.BonusFlags))
 	//fmt.Printf("   Flags: %d	Bonus Flags: %d\n", len(l.Flags), len(l.BonusFlags))
 	fmt.Printf("   Steps:\n")
+	stepData := pterm.TableData{
+		{"Step #", "Task", "Status", "Question"},
+	}
 	for i, step := range l.Steps {
-		stepStatus := "incomplete"
+		stepNum := fmt.Sprintf("%d", (i + 1))
+		stepText := step.ShortText
+		stepStatus := ""
+		//stepStatus := ""
 		if i < len(results.Steps) {
 			stepStatus = results.Steps[i]
+			if stepStatus == "success" {
+				stepStatus = pterm.Green("DONE")
+			} else {
+				stepStatus = ""
+			}
 		}
-		fmt.Printf("      %d. %s (%s)\n", i+1, step.Text, stepStatus)
+		q := ""
+		if step.Question.Type != "" {
+			q = "Yes"
+		}
+		if stepStatus == pterm.Green("DONE") {
+			stepData = append(stepData, []string{pterm.Gray(stepNum), pterm.Gray(step.ShortText), stepStatus, q})
+		} else {
+			stepData = append(stepData, []string{stepNum, stepText, stepStatus, q})
+		}
+		//fmt.Printf("      %d. %s (%s)\n", i+1, step.Text, stepStatus)
 	}
+	pterm.DefaultTable.WithHasHeader().WithData(stepData).Render()
 }
 
 func (l *Lab) Check(step int) bool {
