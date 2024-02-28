@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/doolinius/ulab"
+	"github.com/pterm/pterm"
 )
 
 func main() {
@@ -116,7 +117,8 @@ func main() {
 		// TODO: necessary checks
 		inProgressCheck(userStatus)
 		//pwdCheck(userStatus)
-		fmt.Printf("Checking current step...\n")
+		//fmt.Printf("Checking current step...\n")
+		pterm.Println()
 		labCheck(userStatus)
 	case "next":
 		// do necessary checks
@@ -139,13 +141,22 @@ func main() {
 			}
 			lab := ulab.OpenLabFile(userStatus.CurrentLab)
 			if lab.CheckFlag(flagNum) {
-				fmt.Printf("SUCCESS! You've captured Lab %s Flag %d\n", lab.Number, flagNum)
-				userStatus.AddFlag(lab.Number, flagNum)
+				if userStatus.AddFlag(lab.Number, flagNum) {
+					pterm.Success.Printf("You've captured Lab %s Flag %d\n", lab.Number, flagNum)
+					//fmt.Printf("SUCCESS! You've captured Lab %s Flag %d\n", lab.Number, flagNum)
+				} else {
+					pterm.Error.Printf("Flag %d has already been captured\n", flagNum)
+				}
 			} else if lab.CheckBonusFlag(flagNum) {
-				fmt.Printf("SUCCESS! You've captured Lab %s BONUS Flag %d\n", lab.Number, flagNum)
-				userStatus.AddBonusFlag(lab.Number, flagNum)
+				if userStatus.AddBonusFlag(lab.Number, flagNum) {
+					pterm.Success.Printf("You've captured Lab %s BONUS Flag %d\n", lab.Number, flagNum)
+					//fmt.Printf("SUCCESS! You've captured Lab %s BONUS Flag %d\n", lab.Number, flagNum)
+				} else {
+					pterm.Error.Printf("Bonus Flag %d has already been captured\n", flagNum)
+				}
 			} else {
-				fmt.Printf("Invalid flag number (%d) for Lab %s!\n", flagNum, lab.Number)
+				pterm.Error.Printf("Invalid flag number (%d) for Lab %s!\n", flagNum, lab.Number)
+				//fmt.Printf("Invalid flag number (%d) for Lab %s!\n", flagNum, lab.Number)
 			}
 		}
 	case "submit":
@@ -189,10 +200,12 @@ func labCheck(s *ulab.Status) {
 		if q.Type != "" {
 			qNum := fmt.Sprintf("q%d", s.CurrentStep)
 			if q.Ask() {
-				fmt.Printf("Correct! %s\n", q.Feedback)
+				pterm.Success.Println(q.Feedback)
+				//fmt.Printf("Correct! %s\n", q.Feedback)
 				s.AddQuestionResult(l.Number, qNum, "correct")
 			} else {
-				fmt.Printf("Sorry, that is incorrect.\n")
+				pterm.Error.Println("Sorry, that is incorrect")
+				//fmt.Printf("Sorry, that is incorrect.\n")
 				s.AddQuestionResult(l.Number, qNum, "incorrect")
 			}
 			s.Save()
@@ -202,7 +215,7 @@ func labCheck(s *ulab.Status) {
 		if !s.StepsCompleted(l.Number) {
 			//answer := yesOrNo("Would you like to move on to the next step?")
 			//if answer == "yes" {
-			fmt.Printf("Let's move on to the next Step!\n\n")
+			//fmt.Printf("Let's move on to the next Step!\n\n")
 			labNext(l, s)
 			//}
 		} else {
@@ -288,9 +301,6 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 
 	lab := ulab.OpenLabFile(labNum)
 
-	// check for data files and extract if necessary
-	lab.Extract()
-
 	// Mark first step as in-progress for user
 	s.CurrentLab = lab.Number
 	s.CurrentStep = 0
@@ -300,11 +310,22 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 	s.Save()
 
 	// Print greeting
-	fmt.Printf("\nWelcome to Lab %s - %s\n\n", lab.Number, lab.Name)
-	fmt.Printf("%s\n\n", lab.Description)
+	primary := pterm.NewStyle(pterm.FgBlack, pterm.BgCyan)
+	pterm.DefaultHeader.WithFullWidth().WithBackgroundStyle(pterm.NewStyle(pterm.BgCyan)).WithTextStyle(pterm.NewStyle(pterm.FgBlack)).Printf("Welcome to Lab %s - %s", lab.Number, lab.Name)
+	//fmt.Printf("\nWelcome to Lab %s - %s\n\n", lab.Number, lab.Name)
+	//pterm.Println()
+
+	// check for data files and extract if necessary
+	lab.Extract()
+
+	descPar := pterm.DefaultSection.Sprint(lab.Description)
+	//descParCenter := pterm.DefaultBox.WithTitle("Description").Sprint(descPar)
+	pterm.DefaultCenter.Println(descPar)
+	//fmt.Printf("%s\n\n", lab.Description)
 
 	// Print flag info
-	fmt.Printf("\tThis lab has %d Flags and %d Bonus Flags.\n\n", len(lab.Flags), len(lab.BonusFlags))
+	pterm.DefaultCenter.Println("This lab has " + primary.Sprintf("%d Flags", len(lab.Flags)) + " and " + primary.Sprintf("%d Bonus Flags", len(lab.BonusFlags)))
+	//fmt.Printf("\tThis lab has %d Flags and %d Bonus Flags.\n\n", len(lab.Flags), len(lab.BonusFlags))
 
 	// Get first step
 	firstStep := lab.Steps[0]

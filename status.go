@@ -188,24 +188,26 @@ func (s *Status) GetResults(labNum string) *LabResult {
 	return nil
 }
 
-func (s *Status) AddFlag(labNum string, flagNum int) {
+func (s *Status) AddFlag(labNum string, flagNum int) bool {
 	result := s.GetResults(labNum)
 	if slices.Contains(result.Flags, flagNum) {
-		fmt.Printf("Flag %d has already been captured\n", flagNum)
-		return
+		//fmt.Printf("Flag %d has already been captured\n", flagNum)
+		return false
 	}
 	result.Flags = append(result.Flags, flagNum)
 	s.Save()
+	return true
 }
 
-func (s *Status) AddBonusFlag(labNum string, flagNum int) {
+func (s *Status) AddBonusFlag(labNum string, flagNum int) bool {
 	result := s.GetResults(labNum)
 	if slices.Contains(result.BonusFlags, flagNum) {
-		fmt.Printf("Bonus Flag %d has already been captured\n", flagNum)
-		return
+		//fmt.Printf("Bonus Flag %d has already been captured\n", flagNum)
+		return false
 	}
 	result.BonusFlags = append(result.BonusFlags, flagNum)
 	s.Save()
+	return true
 }
 
 func (s *Status) AddQuestionResult(labNum string, qNum string, qResult string) {

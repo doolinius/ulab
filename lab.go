@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+
+	"github.com/pterm/pterm"
+	"github.com/pterm/pterm/putils"
 )
 
 type StepTest struct {
@@ -15,6 +18,7 @@ type StepTest struct {
 }
 
 type Step struct {
+	ShortText      string   `json:"shortText"`
 	Text           string   `json:"text"`
 	Tasks          []string `json:"tasks"`
 	Tips           string   `json:"tips"`
@@ -37,10 +41,10 @@ type Lab struct {
 
 func (l *Lab) Extract() {
 	if !l.Datafiles {
-		fmt.Printf("No data files are required for this lab.")
+		//fmt.Printf("No data files are required for this lab.")
 	} else {
-		fmt.Printf("\nThis lab requires data files.\n")
-		fmt.Printf("Extracting data files...")
+		//fmt.Printf("\nThis lab requires data files.\n")
+		//fmt.Printf("Extracting data files...")
 		datafilePath := ULConfig.Root + "/labs/" + l.Number + "/data.zip"
 		_, err := exec.Command("/usr/bin/unzip", datafilePath).Output()
 		if err != nil {
@@ -51,8 +55,10 @@ func (l *Lab) Extract() {
 
 func (l *Lab) PrintSteps(s *Status) {
 	results := s.GetResults(l.Number)
-	fmt.Printf("Lab %s Steps\n\n", l.Number)
-	fmt.Printf("   Flags: %d	Bonus Flags: %d\n", len(l.Flags), len(l.BonusFlags))
+	pterm.DefaultHeader.WithFullWidth().Printf("Lab %s Status", l.Number)
+	//fmt.Printf("Lab %s Steps\n\n", l.Number)
+	pterm.DefaultCenter.Printf("Flags: %d/%d\nBonus Flags: %d/%d", len(results.Flags), len(l.Flags), len(results.BonusFlags), len(l.BonusFlags))
+	//fmt.Printf("   Flags: %d	Bonus Flags: %d\n", len(l.Flags), len(l.BonusFlags))
 	fmt.Printf("   Steps:\n")
 	for i, step := range l.Steps {
 		stepStatus := "incomplete"
@@ -69,10 +75,12 @@ func (l *Lab) Check(step int) bool {
 	case "checkvar":
 		val := os.Getenv(test.Command)
 		if val == test.Value && test.Condition == true {
-			fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
+			pterm.Success.Println(l.Steps[step].SuccessMessage)
+			//fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
 			return true
 		} else {
-			fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
+			pterm.Error.Println(l.Steps[step].RetryMessage)
+			//fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
 			return false
 		}
 	case "script":
@@ -83,11 +91,13 @@ func (l *Lab) Check(step int) bool {
 		// fun new switch statement
 		switch {
 		case (err != nil && test.Condition == true), (err == nil && test.Condition == false):
-			fmt.Printf("%v\n", err)
-			fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
+			//fmt.Printf("%v\n", err)
+			pterm.Error.Println(l.Steps[step].RetryMessage)
+			//fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
 			return false
 		case (err == nil && test.Condition == true), (err != nil && test.Condition == false):
-			fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
+			pterm.Success.Println(l.Steps[step].SuccessMessage)
+			//fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
 			return true
 		}
 	case "command":
@@ -96,11 +106,13 @@ func (l *Lab) Check(step int) bool {
 		_, err := exec.Command("bash", "-c", test.Command).Output()
 		switch {
 		case (err != nil && test.Condition == true), (err == nil && test.Condition == false):
-			fmt.Printf("%v\n", err)
-			fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
+			//fmt.Printf("%v\n", err)
+			pterm.Error.Println(l.Steps[step].RetryMessage)
+			//fmt.Printf("\n%s\n\n", l.Steps[step].RetryMessage)
 			return false
 		case (err == nil && test.Condition == true), (err != nil && test.Condition == false):
-			fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
+			pterm.Success.Println(l.Steps[step].SuccessMessage)
+			//fmt.Printf("\n%s\n\n", l.Steps[step].SuccessMessage)
 			return true
 		}
 		/*
@@ -126,14 +138,26 @@ func (l *Lab) PrintStep(stepNum int) {
 }
 
 func (s *Step) PrintTasks(stepNum int) {
-	fmt.Printf("Step %d: %s\n\n", stepNum+1, s.Text)
+	primary := pterm.NewStyle(pterm.FgBlack, pterm.BgCyan)
+	secondary := pterm.NewStyle(pterm.FgBlack, pterm.BgLightYellow)
+	pterm.Println(primary.Sprintf("\n Step %d: ", stepNum+1) + pterm.Sprintf(" %s\n", s.Text))
+	//fmt.Printf("Step %d: %s\n\n", stepNum+1, s.Text)
 	fmt.Println("Perform the following tasks/commands:")
+	bulletListItems := "" /*pterm.BulletListItem{
+		{Level: 0, Text: "Level 0"}, // Level 0 item
+		{Level: 1, Text: "Level 1"}, // Level 1 item
+		{Level: 2, Text: "Level 2"}, // Level 2 item
+	}*/
 	for _, task := range s.Tasks {
-		fmt.Printf("\t%s\n", task)
+		bulletListItems += "    " + task + "\n"
+		//fmt.Printf("\t%s\n", task)
 	}
-	fmt.Printf("\tlab check\n\n")
+	bulletListItems += "    lab check"
+	putils.BulletListFromString(bulletListItems, " ").Render()
+	//fmt.Printf("\tlab check\n\n")
 	if s.Tips != "" {
-		fmt.Printf("TIPS: %s\n", s.Tips)
+		pterm.Println(secondary.Sprintf("  TIPS:  ") + pterm.Sprintf(" %s", s.Tips))
+		//fmt.Printf("TIPS: %s\n", s.Tips)
 	}
 }
 

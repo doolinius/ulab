@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/pterm/pterm"
 )
 
 /*
@@ -25,8 +27,10 @@ func (q *Question) Ask() bool {
 	// Prompt for answer
 	// Validate input
 	// Check answer
-	fmt.Printf("			** QUESTION **\n\n")
-	fmt.Printf("%s\n\n", q.Text)
+	pterm.DefaultCenter.Println("** QUESTION **")
+	pterm.Println()
+	//fmt.Printf("			** QUESTION **\n\n")
+	//fmt.Printf("%s\n\n", q.Text)
 	switch q.Type {
 	case "TF":
 		answer = getTF()
