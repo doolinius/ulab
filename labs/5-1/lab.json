@@ -6,6 +6,7 @@
     "submitMessage":"",
     "steps": [
         {
+            "shortText": "Change to the lab_data directory",
             "text": "This lab has extracted a folder of data files in your home directory. You need to change to this directory (remember that 'directory' and 'folder' mean the same thing).",
             "tasks": [
                 "[change to lab_data directory]"
@@ -20,6 +21,7 @@
             "retryMessage": "Hmmm... Looks like you're in the wrong directory. You should start all labs from your home directory. Type 'ls' to make sure the 'lab_data' directory is there. Type 'pwd' to see if you are in your home directory."
         },
         {
+            "shortText": "Viewing and determining permissions modes #1",
             "text":"The first section of this lab will be reporting the three digit, numeric permissions modes for several files. This will be done as a series of questions. If you are unsure about how to determine the numeric mode based on a file listing, please revisit the course materials before continuing.\n\nFirst, let's look at the permissions for the file 'secrets.zip'",
             "tasks": ["ls -l secrets.zip"],
             "test": {
@@ -39,6 +41,7 @@
             }
         },
         {
+            "shortText": "Viewing and determining permissions modes #2",
             "text":"The next file, 'team_notes.txt', represents a file that a development team leader may keep on a project.",
             "tasks": ["ls -l team_notes.txt"],
             "test": {
@@ -58,6 +61,7 @@
             }
         },
         {
+            "shortText": "Viewing and determining permissions modes #3",
             "text":"On to 'tutorial.docx'. This file represents a document that could be readable by everyone on the system, perhaps as a tutorial for some software or process.",
             "tasks": ["ls -l tutorial.docx"],
             "test": {
@@ -77,6 +81,7 @@
             }
         },
         {
+            "shortText": "Viewing and determining permissions modes #4",
             "text":"Now it's time for the 'script.sh' file. Files with the .sh extension are Unix shell scripts, which are often set to be executable programs.",
             "tasks": ["ls -l script.sh", "./script.sh"],
             "test": {
@@ -96,6 +101,7 @@
             }
         },
         {
+            "shortText": "Viewing and determining permissions modes #5",
             "text":"Ok, now let's have a look at the directory, 'department_forms'.",
             "tasks": ["ls -l"],
             "test": {
@@ -115,6 +121,7 @@
             }
         },
         {
+            "shortText": "Setting permissions with 'chmod' #1",
             "text":"The rest of the steps will require that you set the permissions of some files. All of these files are currently set to 000, which means nobody has any permissions of any sort.\n\nLet's start with 'for_my_eyes_only.txt'. For this file, set the permissions so that the user can read, but not write or execute. Leave group and everyone else at 0 (no permissions). \n\nWhere it says [mode], you must supply the three digit permissions mode",
             "tasks": [
                 "chmod <mode> for_my_eyes_only.txt"
@@ -129,6 +136,7 @@
             "retryMessage": "Double check your chmod syntax or the permissions mode. Remember that it is read only, and only for the user."
         },
         {
+            "shortText": "Setting permissions with 'chmod' #2",
             "text":"Next we'll modify the permissions for the file 'cit220_only.txt'. For this one, the user should have read and write acccess, and the group cit220 will have read access only. Everyone else will have zero permissions to the file.  This will require a 'chgrp' and a 'chmod'.",
             "tasks": [
                 "[change group ownership of 'cit220_only.txt' to 'cit220']",
@@ -144,6 +152,7 @@
             "retryMessage": "Double check your chmod syntax or the permissions mode."
         },
         {
+            "shortText": "Setting permissions with 'chmod' #3",
             "text":"Now for the file 'cit220_wiki.txt'. This could be a file that anyone in the 'cit220' group can both read and write to, and anyone can read. So the user should have read and write acccess, the group cit220 will have read and write access. Everyone else will have read only.  This will require a 'chgrp' and a 'chmod'.",
             "tasks": [
                 "[change group ownership of 'cit220_wiki.txt' to 'cit220']",
@@ -166,6 +175,7 @@
             }
         },
         {
+            "shortText": "Setting permissions with 'chmod' #4",
             "text":"Now for the file 'open_book.txt'. This could be a file that anyone on the system can read, but only the user can write to it. So the user should have read and write acccess, the group will have read only. Everyone else will have read only.",
             "tasks": [
                 "[use chmod to set permissions for open_book.txt as stated above]"
@@ -180,6 +190,7 @@
             "retryMessage": "Double check your chmod syntax or the permissions mode."
         },
         {
+            "shortText": "Setting permissions with 'chmod' #5",
             "text":"The file 'run_me.sh' is a shell script that can be run as a program. This means it will need to be executable. However, to execute a program, a user must also be able to read it Set this script to be executable and readable by the user, group and everyone else, but writeable only by the user.",
             "tasks": [
                 "[use chmod to set permissions for run_me.sh as stated above]",
@@ -195,19 +206,18 @@
             "retryMessage": "Double check your chmod syntax or the permissions mode.."
         },
         {
+            "shortText": "Clean up and finish",
             "text":"To finish this lab, we'll go back to your home directory and remove the files that were extracted for this lab.",
             "tasks": [
                 "cd",
-                "rmdir lab_data",
-                "rm -rf lab_data",
-                "ls"
+                "rm -rf lab_data"
             ],
             "test": {
                 "testType": "script",
                 "command": "finish.sh",
                 "condition": true
             },
-            "tips": "When you use the 'cd' command without giving it the name of a directory, it simply takes you back to your home directory. Note that the 'rmdir' command WILL FAIL, and the error will show you why. The next 'rm' command should work.",
+            "tips": "",
             "successMessage": "Ok, it looks like you've removed all of the lab files and have finished. Very good.",
             "retryMessage": "You may have missed something. You are either in the wrong directory, or the lab_data directory has not yet been removed."
         }

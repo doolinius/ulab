@@ -6,11 +6,12 @@
     "submitMessage":"",
     "steps": [
         {
-            "text": "First, let's take a look at your own user identity.",
+            "shortText": "Viewing your user id details",
+            "text": "First, let's take a look at your own user identity, using the 'id' command. Without any arguments, this command will show you your own username, numeric ID, and the names and IDs of all groups of which you are a member.",
             "tasks": [
                 "id"
             ],
-            "tips": "Without any arguments, this command will show you your own username, numeric ID, and the names and IDs of all groups of which you are a member.",
+            "tips": "",
             "test": {
                 "testType": "command",
                 "command": "true",
@@ -27,6 +28,7 @@
             }
         },
         {
+            "shortText": "Viewing the user id details of another user",
             "text":"Now view get the same id information for the user 'lsanborn', which is a test user account on this system. This time we'll pass a username to the 'id' command.",
             "tasks": ["id lsanborn"],
             "test": {
@@ -46,6 +48,7 @@
             }
         },
         {
+            "shortText": "Listing home directories",
             "text":"As we saw in an earlier lab, every Unix login account gets their own 'home' directory. These are most often in the /home directory. Let's take a look at a few listings.",
             "tasks": [
                 "ls -l /home", 
@@ -61,6 +64,7 @@
             "retryMessage": "I'm not sure why this would fail."
         },
         {
+            "shortText": "Viewing /etc/passwd and entries",
             "text":"User account information is stored in a plain text file called /etc/passwd (not a typo). Each line contains a single user entry, which includes the username, user id number, primary group number, comment, home directory and default shell. First, you'll look at the file with 'less', then filter it to view one entry.",
             "tasks": ["less /etc/passwd", "cat /etc/passwd | grep lsanborn"],
             "test": {
@@ -80,6 +84,7 @@
             }
         },
         {
+            "shortText": "Accounts with the 'nologin' shell",
             "text":"Filter the /etc/passwd file again, this time by grepping for 'nologin', but first, read the man page for 'nologin'. Press 'q' to exit the man page.",
             "tasks": ["man nologin", "cat /etc/passwd | grep nologin"],
             "test": {
@@ -99,6 +104,7 @@
             }
         },
         {
+            "shortText": "Trying a command that requires root access",
             "text":"Unix has a strong boundary between the 'root', administrator user, and the other user accounts. 'root' is used for system setup and configuration tasks, such as creating new users and installing software. Normal or 'unprivileged' users cannot perform these tasks. Let's try something that only root can do: install software with the 'dnf' command.",
             "tasks": ["dnf install unrar"],
             "test": {
@@ -111,6 +117,7 @@
             "retryMessage": "Should not fail."
         },
         {
+            "shortText": "Running a command as root with 'sudo'",
             "text":"The 'sudo' utility allows an unprivileged user to run a command as root. Your user account must still be given permission to run commands with 'sudo', so this may not work on all systems.",
             "tasks": [
                 "tryme",
@@ -126,6 +133,7 @@
             "retryMessage": "Should not fail."
         },
         {
+            "shortText": "Sending an email with one command",
             "text":"One last step. Though it is less common now, it is possible to set up a local email system for Unix systems, so that users on the system can email each other, though not anything outside the system. For this last step, you will send your instructor an email on the command line.",
             "tasks": [
                 "echo \"Finished with Lab 4-1\" | mail -s \"Lab Complete\" jdoolin@thompson"

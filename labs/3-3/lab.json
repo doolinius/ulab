@@ -6,6 +6,7 @@
     "submitMessage":"",
     "steps": [
         {
+            "shortText": "Change to the lab_data directory",
             "text": "This lab has extracted a folder of data files in your home directory. You need to change to this directory.",
             "tasks": [
                 "[change to the lab_data directory]"
@@ -20,6 +21,7 @@
             "retryMessage": "Hmmm... Looks like you're in the wrong directory. You should start all labs from your home directory. Type 'ls' to make sure the 'lab_data' directory is there. Type 'pwd' to see if you are in your home directory."
         },
         {
+            "shortText": "View the directory and contents of a file",
             "text":"Ok, let's see what's in the directory, and in one of the files.",
             "tasks": ["[list the contents of the directory]", "[use the 'cat' command to see what is in people.txt]"],
             "test": {
@@ -32,7 +34,8 @@
             "retryMessage": "I'm not sure why this would fail."
         },
         {
-            "text":"You often need to look at the contents of a file that is too large for cat to display on one screen.",
+            "shortText": "Viewing a file with 'less'",
+            "text":"You often need to look at the contents of a file that is too large for cat to display on one screen. You will use a program known as a 'pager' to view it.",
             "tasks": ["less using_less.txt"],
             "test": {
                 "testType": "command",
@@ -44,7 +47,8 @@
             "retryMessage": "I'm not sure why this would fail."
         },
         {
-            "text":"Let's use a text editor to view a file this time.",
+            "shortText": "Open a file with a text editor",
+            "text":"Let's use a text editor to view a file this time. 'nano' is a basic text editor available on most Unix systems.",
             "tasks": ["nano using_nano.txt"],
             "test": {
                 "testType": "command",
@@ -56,6 +60,7 @@
             "retryMessage": "I'm not sure why this would fail."
         },
         {
+            "shortText": "Creating a new file with a text editor",
             "text":"Now use nano to create a new file. Enter the following command, use the editor to type your full name, then save and exit.",
             "tasks": ["nano me.txt"],
             "test": {
@@ -68,6 +73,7 @@
             "retryMessage": "I don't see the file called 'me.txt'. Be sure that you saved the file from nano, or that you named it correctly."
         },
         {
+            "shortText": "Printing text with the 'echo' command",
             "text":"Next we're going to look at the 'echo' command. Echo is something like a print statement, that prints what you tell it to.",
             "tasks": ["echo \"Tony Stark\""],
             "test": {
@@ -80,6 +86,7 @@
             "retryMessage": "Should not fail."
         },
         {
+            "shortText": "Using Output Redirection",
             "text":"Now let's look at a feature called Output Redirection. Most commands that produce output print this output to the terminal, as we see right now. That's what happend with the 'echo' command in the last step. But you can also redirect the output to a file instead.",
             "tasks": ["echo \"Tony Stark\" > iron_man.txt", "ls", "cat iron_man.txt"],
             "test": {
@@ -92,6 +99,7 @@
             "retryMessage": "The iron_man.txt file does not exist here. Double check your command syntax and filenam spelling and try again."
         },
         {
+            "shortText": "Combining the content of multiple files",
             "text":"Now let's 'cat' three files at once, in two different ways.",
             "tasks": [
                 "cat people.txt me.txt iron_man.txt",
@@ -108,6 +116,7 @@
             "retryMessage": "It looks like 'everyone.txt' is still not there. Double check your spelling and command syntax and try again."
         },
         {
+            "shortText": "Using Pipes",
             "text":"Now for a demonstration of 'pipes', a fundamental part of the Unix philosophy and one of the most useful parts of the command line. A pipe is similar to output redirection, but instead of sending the output to a file, it sends it as the input to another program. In this case, it will send the output of the 'cat' command as input for the 'less' pager. Remember to press 'q' to exit the pager.",
             "tasks": [
                 "cat everyone.txt | less"
@@ -122,6 +131,7 @@
             "retryMessage": "Should not fail."
         },
         {
+            "shortText": "Using pipes to count lines and sort",
             "text":"Now let's look at a couple more interesting examples. You will still cat 'everyone.txt' but this time you will pipe the output to two different programs. The first is the 'wc' or 'word count' program. You will pass '-l' to count only the lines. The second is 'sort', which not surprisingly, will sort the lines of the file.",
             "tasks": [
                 "[cat everyone.txt and pipe to 'wc -l']",
@@ -137,6 +147,7 @@
             "retryMessage": "Should not fail."
         },
         {
+            "shortText": "Sorting and removing duplicates with pipes",
             "text":"You can continue to add more pipes to a single command, and even combine them with output redirection. Let's try that. You will pipe the output of cat to sort, then to a program called 'uniq' that removes duplicate lines of text. First you will run the command so you can see the output, then redirect the same command to a new file.",
             "tasks": [
                 "cat everyone.txt | sort | uniq",
@@ -152,6 +163,7 @@
             "retryMessage": "The file 'everyone_sorted.txt' does not exist. Check your spelling and command syntax and try again."
         },
         {
+            "shortText": "A more fun example with pipes",
             "text":"How about something a little more... colorful.",
             "tasks": [
                 "cat message.txt | cowsay | lolcat"
@@ -166,6 +178,7 @@
             "retryMessage": "Should not fail."
         },
         {
+            "shortText": "Using 'echo' to view Environment Variables",
             "text":"The last few steps involve Environment Variables. When you're logged into a Unix system, you have what is called an 'environment', which consists of settings that are used by the shell and even by programs and commands that you run from the shell. Some environment variables are customizable, while others are set automatically. You can even add your own environment variables. Their names are usually in call caps, but to print them you have to begin the name with a dollar sign ('$'). Let's have a look at a few.",
             "tasks": [
                 "echo $USER",
@@ -182,6 +195,7 @@
             "retryMessage": "Should not fail."
         },
         {
+            "shortText": "Changing the shell prompt",
             "text":"The 'PS1' environment variable controls the appearance of your shell prompt. Let's customize it. To create or reset an environment variable, we use the 'export' command.",
             "tasks": [
                 "echo $PS1",
@@ -198,6 +212,7 @@
             "retryMessage": "The PS1 environment variable does not equal the sequence specified. Double check everything, as it must be exact."
         },
         {
+            "shortText": "Creating a new Environment Variable",
             "text":"Now let's create our own environment variable. On some Unix systems, there is an environment variable called 'PAGER' that determines which pager program to use when a command needs to display a large amount of text. This system does not have this variable set, so let's do so.",
             "tasks": [
                 "echo $PAGER     (should be blank)",
@@ -213,6 +228,7 @@
             "retryMessage": "The PAGER environment variable does not equal 'less'. Double check everything, as it must be exact."
         },
         {
+            "shortText": "Modifying the executable PATH variable",
             "text":"The PATH environment variable is one of the most important. It is a colon separated list of absolute/full paths to folders that contain external commands. The commands are usually binary executables, so most of the time these paths end in 'bin', the traditional directory name for program file binaries (in Windows, these would have a .exe extension). It is sometimes necessary to change your PATH variable to add new paths for software that is installed on your system. Let's see how this works.",
             "tasks": [
                 "hello   (should produce 'command not found' error)",
@@ -231,19 +247,18 @@
             "retryMessage": "It would seem 'hello' still cannot be run. Run the command 'export PATH=$OLDPATH' and try modifying the PATH variable again."
         },
         {
+            "shortText": "Cleanup and Finish",
             "text":"To finish this lab, we'll go back to your home directory and remove the files that were extracted for this lab.",
             "tasks": [
                 "cd",
-                "rmdir lab_data",
-                "rm -rf lab_data",
-                "ls"
+                "rm -rf lab_data"
             ],
             "test": {
                 "testType": "script",
                 "command": "finish.sh",
                 "condition": true
             },
-            "tips": "When you use the 'cd' command without giving it the name of a directory, it simply takes you back to your home directory. Note that the 'rmdir' command WILL FAIL, and the error will show you why. The next 'rm' command should work.",
+            "tips": "",
             "successMessage": "Ok, it looks like you've removed all of the lab files and have finished. Very good.",
             "retryMessage": "You may have missed something. You are either in the wrong directory, or the lab_data directory has not yet been removed."
         }

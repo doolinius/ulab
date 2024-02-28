@@ -6,6 +6,7 @@
     "submitMessage":"",
     "steps": [
         {
+            "shortText": "Counting the number of available packages",
             "text": "Unix package managers will automatically download software from official 'repositories' for the OS or distribution. This server uses a few of the official RedHat and CentOS repositories. These 'repos' can have quite a few packages availabe. How many? Well let's check what is available for thompson. We'll pipe the output to 'wc -l' to count the number of packages instead of viewing the list.",
             "tasks": [
                 "dnf list | wc -l"
@@ -27,6 +28,7 @@
             }
         },
         {
+            "shortText": "Listing all installed packages",
             "text":"This time we'll list only the *installed* packages by piping to less instead of 'wc'. Have a look through the list, paging down until you reach the bottom. Remember to press 'q' to exit less.",
             "tasks": ["dnf list installed | less"],
             "test": {
@@ -39,6 +41,7 @@
             "retryMessage": "I'm not sure why this would fail."
         },
         {
+            "shortText": "Searching for a package",
             "text":"One of the more frequent tasks in software managing is to see if a package exists for some particular software project, or to see all packages that contain some part of a name. Let's try searching for a package. In this case, we'll look for the very popular open source audio recording and editing software, 'audacity'.",
             "tasks": ["dnf search audacity"],
             "test": {
@@ -58,6 +61,7 @@
             }
         },
         {
+            "shortText": "Searching for another package",
             "text":"Ok, let's see if you can insteall the 'steam' video game service and software.",
             "tasks": ["dnf search steam"],
             "test": {
@@ -77,6 +81,7 @@
             }
         },
         {
+            "shortText": "Obtaining information about a package",
             "text":"It can be useful to get more information and details about an available or installed package. In this case, we use 'dnf info'. This will get the details for the 'golang' package, which installs the Go programming language that was used to build this lab software.",
             "tasks": ["dnf info golang"],
             "test": {
@@ -96,6 +101,7 @@
             }
         },
         {
+            "shortText": "Finding which package provides a file/command",
             "text":"Another useful task is to see which package provides a particular command or file. You can use this for any file on the system, and if it was installed by a package, it will show you which one. Let's try that with a very basic command, 'mkdir'. Which package did that come from?",
             "tasks": ["dnf whatprovides /usr/bin/mkdir"],
             "test": {
@@ -115,6 +121,7 @@
             }
         },
         {
+            "shortText": "Listing all files installed by a package",
             "text":"Now let's see all of the files that are provided by 'coreutils'. We're going to do this twice. The first time shows every single file, but the second one will show only the actual utility binaries provided by the package..",
             "tasks": [
                 "dnf repoquery -l coreutils",
@@ -137,6 +144,7 @@
             }
         },
         {
+            "shortText": "Using the 'cheat' command",
             "text":"Lastly, we're going to use a 'cheat sheet' to see how to use 'dnf' to install a program. 'cheat' is a useful tool that is NOT part of the coreutils, and must be installed separately. It is similar in concept to 'man' pages, but gets right to the point by showing specific examples of common tasks. First you will create a config file and download the cheatsheets for 'cheat', then use it to see the cheatsheet for 'dnf'.",
             "tasks": [
                 "cheat     (answer 'y' to both questions to install the cheatsheets)",

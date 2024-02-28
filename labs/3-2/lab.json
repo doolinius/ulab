@@ -6,6 +6,7 @@
     "submitMessage":"",
     "steps": [
         {
+            "shortText": "Change to the lab_data directory",
             "text": "This lab has extracted a folder of data files in your home directory. You need to change to this directory (remember that 'directory' and 'folder' mean the same thing).",
             "tasks": [
                 "ls",
@@ -21,6 +22,7 @@
             "retryMessage": "Hmmm... Looks like you're in the wrong directory. You should start all labs from your home directory. Type 'ls' to make sure the 'lab_data' directory is there. Type 'pwd' to see if you are in your home directory."
         },
         {
+            "shortText": "Listing the directory with details",
             "text":"Ok, let's see what's in this lab_data directory. This time we're going to pass some flags to the 'ls' command so we can get more information.",
             "tasks": ["ls -l"],
             "test": {
@@ -33,6 +35,7 @@
             "retryMessage": "I'm not sure why this would fail."
         },
         {
+            "shortText": "List files in a different directory",
             "text":"You can also list the files for a directory that you are not in.",
             "tasks": ["ls -l look_here"],
             "test": {
@@ -45,6 +48,7 @@
             "retryMessage": "I'm not sure why this would fail."
         },
         {
+            "shortText": "Create a new directory", 
             "text":"Let's organize some of this. There are lots of different file types in here, so let's create some directories for storing them in a more organized way. We'll start with the Word documents.",
             "tasks": ["mkdir documents"],
             "test": {
@@ -57,6 +61,7 @@
             "retryMessage": "The 'documents' directory does not seem to be there. Remember that Unix filenames are usually case sensitive, so if you spelled it with a capital D, as in 'Documents', that is incorrect."
         },
         {
+            "shortText": "Move a file to a different directory",
             "text":"There are several word documents here, so let's start by moving just one.",
             "tasks": ["mv english_paper.docx documents"],
             "test": {
@@ -69,6 +74,7 @@
             "retryMessage": "The 'english_paper.docx' file does not seem to be in the 'documents' directory. Please check your spelling and try again."
         },
         {
+            "shortText": "Moving multiple files",
             "text":"It would be tedious to move ALL of the Word documents into that directory one at a time, so let's use a file wildcard to make this faster.",
             "tasks": ["mv *.docx documents", "ls"],
             "test": {
@@ -81,6 +87,7 @@
             "retryMessage": "There are still .docx files in your present working directory. You may want to double check your command syntax, such as making sure there are spaces between 'ls' and '*.docx'."
         },
         {
+            "shortText": "Move .xlsx files to a new directory",
             "text":"Let's do the same thing with the Excel files and the photos (.jpg).",
             "tasks": [
                 "[create a directory called 'spreadsheets']",
@@ -99,7 +106,8 @@
             "retryMessage": "Something went wrong. Either the 'spreadsheets' directory is not there, is named incorrectly, or the .xlsx files have not been moved into it."
         },
         {
-            "text":"Now, let's rename a file.",
+            "shortText": "Rename a file",
+            "text":"Now, let's rename a file. The 'mv' command is also the command for renaming files. In this case, you must supply the 'mv' command with the current filename followed by the new filename.",
             "tasks": [
                 "mv letter_a.txt repeating_a.txt",
                 "ls"
@@ -109,12 +117,13 @@
                 "command": "ls repeating_a.txt",
                 "condition": true
             },
-            "tips": "The 'mv' command is also the command for renaming files. In this case, you must supply the 'mv' command with the current filename followed by the new filename.",
+            "tips": "",
             "successMessage": "Nice work. You can also rename a file while moving it to a new directory. Just supply the new filename along with the destination directory. For example: mv photo16.jpg photos/mycat.jpg.",
             "retryMessage": "The new file 'repeating_a.txt' does not exist. Double check your spelling, especially if you accidentally renamed it to the wrong name."
         },
         {
-            "text":"Let's check for hidden files.",
+            "shortText": "Viewing hidden files", 
+            "text":"Let's check for hidden files. Any files whose names begin with a dot (.) are not listed by default when you run 'ls'. These are called 'dotfiles'. You have to pass the '-a' flag to see them in the listing.",
             "tasks": [
                 "ls -a"
             ],
@@ -123,12 +132,13 @@
                 "command": "true",
                 "condition": true
             },
-            "tips": "Any files whose names begin with a dot (.) are not listed by default when you run 'ls'. These are called 'dotfiles'. They aren't used for actually hiding data, but they are usually configuration or settings files that you probably don't need to see all of the time. Try 'ls -a' in your home directory after submitting this lab and you'll see some config files.",
+            "tips": "Dotfiles aren't used for actually hiding data, but they are usually configuration or settings files that you probably don't need to see all of the time. Try 'ls -a' in your home directory after submitting this lab and you'll see some config files.",
             "successMessage": "Hmm... notice anything about that hidden filename?",
             "retryMessage": ""
         },
         {
-            "text":"Now, let's try unzipping a file.",
+            "shortText": "Unzipping a file",
+            "text":"Now, let's try unzipping a file. Zip files are a common file compression format across many operating systems. It is a way of collecting multiple files into a single file, and/or to compress files so that it uses less storage space. ",
             "tasks": [
                 "unzip example.zip",
                 "ls -l"
@@ -138,12 +148,13 @@
                 "command": "ls whats_this.txt",
                 "condition": true
             },
-            "tips": "Zip files are a common file compression format across many operating systems. It is a way of collecting multiple files into a single file, and/or to compress files so that it uses less storage space. The 'unzip' command requires that you supply the name of the zip file that you want to extract. It will then show you the files that it created.",
+            "tips": "The 'unzip' command requires that you supply the name of the zip file that you want to extract. It will then show you the files that it created as it extracts them.",
             "successMessage": "Extracting compressed and archived files is a common task in any system. We'll be looking at more file formats that are more commonly used on Unix systems in a future lab.",
             "retryMessage": "Unzipping this file should have resulted in a new file being created, but I don't see it."
         },
         {
-            "text":"It's time to create copies of a file.",
+            "shortText": "Copying files", 
+            "text":"It's time to create copies of a file. The 'cp' command requires source files and a destination directory for its arguments",
             "tasks": [
                 "cp example.zip example_copy.zip",
                 "mkdir backup",
@@ -155,12 +166,13 @@
                 "command": "ls backup/example.zip && ls backup/repeating_a.txt",
                 "condition": true
             },
-            "tips": "The 'cp' command requires source files and a destination directory. In the first example, you will create a copy of the 'info.zip' file in this directory, so it has to have a new name. In the second example, you will create copies of two files in the 'backup' directory.",
+            "tips": "In the first example, you will create a copy of the 'info.zip' file in this directory, so it has to have a new name. In the second example, you will create copies of two files in the 'backup' directory.",
             "successMessage": "Nice job. You have created copies of files in two different ways. 'cp' can be used in many ways. Practice using it to become familiar with them.",
             "retryMessage": "Something isn't right here. Either the directory was not created, or the files were not copied to it."
         },
         {
-            "text":"To finish this lab, we'll go back to your home directory and remove the files that were extracted for this lab.",
+            "shortText": "Clean up the lab_data",
+            "text":"To finish this lab, we'll go back to your home directory and remove the files that were extracted for this lab. When you use the 'cd' command without giving it the name of a directory, it simply takes you back to your home directory. ",
             "tasks": [
                 "cd",
                 "rmdir lab_data",
@@ -172,7 +184,7 @@
                 "command": "finish.sh",
                 "condition": true
             },
-            "tips": "When you use the 'cd' command without giving it the name of a directory, it simply takes you back to your home directory. Note that the 'rmdir' command WILL FAIL, and the error will show you why. The next 'rm' command should work.",
+            "tips": "Note that the 'rmdir' command WILL FAIL, and the error will show you why. The next 'rm' command should work.",
             "successMessage": "Ok, it looks like you've removed all of the lab files and have finished. Very good.",
             "retryMessage": "You may have missed something. You are either in the wrong directory, or the lab_data directory has not yet been removed."
         }

@@ -6,6 +6,7 @@
     "submitMessage":"This lab was a basic introduction to the CIT Unix server, the 'lab' system, and a few basic Unix commands and concepts. You're now ready to take on some larger, more involved labs. Remember to contact your instructor if you have any problems with the CIT Unix server or the 'lab' system. And most importantly, have fun!",
     "steps": [
         {
+            "shortText": "Changing your password",
             "text": "The first thing you need to do is change your password. Make it something long, but easy to remember.",
             "tasks": [
                 "passwd  (no, that's not a typo, just type that command exactly)"
@@ -20,6 +21,7 @@
             "retryMessage": "Hmmm... Looks like something went wrong. Try the 'passwd' command again."
         },
         {
+            "shortText": "Viewing the README.lab file",
             "text":"Ok, now that your password is updated, let's take a look at the 'lab' system that we'll be using, and that you're technically using right now. You'll do this by printing the contents of a file to your terminal screen.",
             "tasks": ["cat README.lab"],
             "test": {
@@ -32,7 +34,8 @@
             "retryMessage": "I'm not sure why this would fail."
         },
         {
-            "text":"Your Home Directory and Deleting a File",
+            "shortText": "Your Home Directory and Deleting a File",
+            "text":"In this step you'll see what your home directory path is, as well as delete a file. The 'ls' command will be used before and after deleting the file.",
             "tasks":["pwd", "ls", "rm delete_me.txt", "ls"],
             "test": {
                 "testType": "command",
@@ -44,14 +47,15 @@
             "retryMessage":"Hmmm... looks like the 'delete_me.txt' file is still there. Double check your command and check for typos. Remember that Unix filenames are usually case sensitive, so that must match as well."
         },
         {
-            "text":"Delete another file without being told how",
+            "shortText": "Delete another file without being told how",
+            "text":"In this step, you'll delete a file, but you will not be given the exact command. See how the task above is shown in square brackets? This indicates a task where you are being asked to enter a command to perform the task, but you are not given the exact command. In this case you must figure out the command on your own.",
             "tasks":["[remove the file 'README.lab']"],
             "test":{
                 "testType":"command",
                 "command": "ls README.lab",
                 "condition": false
             },
-            "tips": "See how the task above is shown in square brackets? This indicates a task where you are being asked to enter a command to perform the task, but you are not given the exact command. In this case you must figure out the command on your own. You will see more tasks like these as you progress through the course. You're allowed to look up the command in the book or course materials if you want. It may also be a good idea to keep a list of commands and what they do as a cheat sheet.",
+            "tips": "You will see more tasks like these as you progress through the course. You're allowed to look up the command in the book or course materials if you want. It may also be a good idea to keep a list of commands and what they do as a cheat sheet.",
             "successMessage":"Good work, the README.lab file is removed. If you need help with the 'lab' command, you can always read it's manual page by entering the command: man lab.",
             "retryMessage":"Hmmm... looks like the 'README.lab' file is still there. Double check your command and check for typos. Remember that Unix filenames are usually case sensitive, so that must match as well."
         }
