@@ -288,7 +288,7 @@ func labSubmit(s *ulab.Status, l *ulab.Lab) {
 		}
 	}
 	s.Submit(l)
-	s.ScoreReport(l.Number)
+	//s.ScoreReport(l.Number)
 	pterm.DefaultSection.Printf("%s\n", l.SubmitMessage)
 	//fmt.Printf("%s\n", l.SubmitMessage)
 	// copy command history file
