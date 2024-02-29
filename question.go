@@ -1,10 +1,7 @@
 package ulab
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
+	"strconv"
 
 	"github.com/pterm/pterm"
 )
@@ -27,37 +24,44 @@ func (q *Question) Ask() bool {
 	// Prompt for answer
 	// Validate input
 	// Check answer
-	pterm.DefaultCenter.Println("** QUESTION **")
-	pterm.Println()
+	pterm.DefaultCenter.Println(pterm.LightCyan("** QUESTION **"))
 	//fmt.Printf("			** QUESTION **\n\n")
-	//fmt.Printf("%s\n\n", q.Text)
+	//pterm.Printf("%s %s", pterm.LightYellow("-> "), q.Text)
 	switch q.Type {
 	case "TF":
-		answer = getTF()
+		answer = q.getTF()
 		//q.Check(answer)
 	case "MC":
 		answer = q.getOption()
-	case "MS", "ORD":
+	case "MS":
 	case "NUM":
-		answer = getInt(999999999)
+		answer = q.getNum()
 	}
 	return q.Check(answer)
 }
 
-func getTF() int {
-	var answer string
+func (q *Question) getTF() int {
 
-	fmt.Printf("\ttrue or false?\n\n")
-	fmt.Printf("	=> ")
-	fmt.Scan(&answer)
-	answer = strings.ToLower(answer)
-	for answer != "true" && answer != "false" {
-		fmt.Printf("Invalid response. Enter 'true' or 'false'\n\n")
+	/*
+		fmt.Printf("\ttrue or false?\n\n")
 		fmt.Printf("	=> ")
 		fmt.Scan(&answer)
 		answer = strings.ToLower(answer)
-	}
-	if answer == "true" {
+		for answer != "true" && answer != "false" {
+			fmt.Printf("Invalid response. Enter 'true' or 'false'\n\n")
+			fmt.Printf("	=> ")
+			fmt.Scan(&answer)
+			answer = strings.ToLower(answer)
+		}
+	*/
+
+	var options []string
+	options = append(options, "True")
+	options = append(options, "False")
+
+	answer, _ := pterm.DefaultInteractiveSelect.WithFilter(false).WithOptions(options).Show(q.Text)
+
+	if answer == "True" {
 		return 1
 	} else {
 		return 0
@@ -65,10 +69,9 @@ func getTF() int {
 }
 
 func (q *Question) getOption() int {
-	for i, option := range q.Options {
-		fmt.Printf("\t%d - %s\n", i+1, option)
-	}
-	return getInt(len(q.Options))
+	selectedOption, _ := pterm.DefaultInteractiveSelect.WithFilter(false).WithOptions(q.Options).Show()
+
+	return getInt(selectedOption, q.Options)
 }
 
 func (q *Question) Check(answer int) bool {
@@ -81,6 +84,7 @@ func (q *Question) Check(answer int) bool {
 	return false
 }
 
+/*
 func (q *Question) getAnswer() {
 	switch q.Type {
 	case "TF":
@@ -115,22 +119,45 @@ func (q *Question) getAnswer() {
 		}
 	}
 }
+*/
 
-func getInt(max int) int {
-	stdin := bufio.NewReader(os.Stdin)
-	var num int
+func getInt(selected string, list []string) int {
+	for i, option := range list {
+		if option == selected {
+			return i + 1
+		}
+	}
+	return -1
+}
+
+func (q *Question) getNum() int {
 
 	for {
-		fmt.Printf("	=> ")
-		_, err := fmt.Scanf("%d\n", &num)
+		result, _ := pterm.DefaultInteractiveTextInput.Show(q.Text)
+		i, err := strconv.Atoi(result)
 		if err != nil {
-			fmt.Printf("%v\n", err)
-			stdin.ReadString('\n')
-		} else if num > max || num < 1 {
-			fmt.Printf("Invalid choice.\n")
+			// ... handle error
+			pterm.Error.Println("Invalid numeric input. Try again.")
 		} else {
-			return num
+			return i
 		}
 	}
 
+	/*
+		stdin := bufio.NewReader(os.Stdin)
+		var num int
+
+		for {
+			fmt.Printf("	=> ")
+			_, err := fmt.Scanf("%d\n", &num)
+			if err != nil {
+				fmt.Printf("%v\n", err)
+				stdin.ReadString('\n')
+			} else if num > max || num < 1 {
+				fmt.Printf("Invalid choice.\n")
+			} else {
+				return num
+			}
+		}
+	*/
 }

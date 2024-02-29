@@ -7,6 +7,8 @@ import (
 	"os"
 	"slices"
 	"time"
+
+	"github.com/pterm/pterm"
 )
 
 type LabResult struct {
@@ -93,12 +95,30 @@ func (s *Status) ScoreReport(labNum string) {
 	}
 
 	score = numSteps + numFlags + numCorrect + numBonusFlags
-	fmt.Printf("   Steps completed: %d/%d\n", numSteps, numTotalSteps)
-	fmt.Printf("    Flags captured: %d/%d\n", numFlags, result.TotalFlags)
-	fmt.Printf("Questions answered: %d/%d\n", numCorrect, numQuestions)
-	fmt.Printf("       Bonus Flags: %d/%d\n", numBonusFlags, result.TotalBonusFlags)
-	fmt.Printf("       Total Score: %d/%d\n", score, numTotalSteps+result.TotalFlags+result.TotalQuestions)
-	fmt.Printf("\nSubmission Code: %s\n", result.SubmissionCode)
+
+	pterm.DefaultCenter.Println(pterm.Cyan(fmt.Sprintf("*** Lab %s Score Report ***", labNum)))
+	stepData := pterm.TableData{
+		//{"Step #", "Task", "Status", "Question"},
+		{"Steps Completed", fmt.Sprintf("%d/%d", numSteps, numTotalSteps)},
+		{"Flags Captured", fmt.Sprintf("%d/%d", numFlags, result.TotalFlags)},
+		{"Questions Correct", fmt.Sprintf("%d/%d", numCorrect, numQuestions)},
+		{"Bonus Flags", fmt.Sprintf("%d/%d", numBonusFlags, result.TotalBonusFlags)},
+		{"Total Score", fmt.Sprintf("%d/%d", score, numTotalSteps+result.TotalFlags+result.TotalQuestions)},
+	}
+	scoreTable, _ := pterm.DefaultTable.WithRightAlignment().WithData(stepData).Srender()
+	pterm.DefaultCenter.Println(scoreTable)
+	//pterm.DefaultTable.WithRightAlignment().WithData(stepData).Render()
+	paddedBox := pterm.DefaultBox.WithLeftPadding(2).WithRightPadding(2) //.WithTopPadding(1).WithBottomPadding(1)
+	//pterm.DefaultCenter.Println("Submission Code", pterm.Green(result.SubmissionCode))
+	pterm.DefaultCenter.Println(paddedBox.WithTitle(pterm.Green("Submission Code")).WithTitleTopCenter().Sprint(result.SubmissionCode))
+	/*
+		fmt.Printf("   Steps completed: %d/%d\n", numSteps, numTotalSteps)
+		fmt.Printf("    Flags captured: %d/%d\n", numFlags, result.TotalFlags)
+		fmt.Printf("Questions answered: %d/%d\n", numCorrect, numQuestions)
+		fmt.Printf("       Bonus Flags: %d/%d\n", numBonusFlags, result.TotalBonusFlags)
+		fmt.Printf("       Total Score: %d/%d\n", score, numTotalSteps+result.TotalFlags+result.TotalQuestions)
+		fmt.Printf("\nSubmission Code: %s\n", result.SubmissionCode)
+	*/
 }
 
 func (s *Status) FullResults() {
@@ -124,8 +144,13 @@ func (s *Status) Submit(lab *Lab) {
 		t.Year(), t.Month(), t.Day(),
 		t.Hour(), t.Minute())
 	result.SubmissionCode = s.submissionCode(result.FinishTime)
-	fmt.Printf("\n\tSubmission Code: %s\n\n", result.SubmissionCode)
-	fmt.Printf("\n\tTo submit this lab in Brightspace, copy and Paste this code into the Assignment submission text field.")
+	// TODO: Write as a function
+	//paddedBox := pterm.DefaultBox.WithLeftPadding(2).WithRightPadding(2)
+	//pterm.DefaultCenter.Println(paddedBox.WithTitle(pterm.Green("Submission Code")).WithTitleTopCenter().Sprint(result.SubmissionCode))
+	s.ScoreReport(lab.Number)
+
+	//fmt.Printf("\n\tSubmission Code: %s\n\n", result.SubmissionCode)
+	pterm.Info.Printf("\tTo submit this lab in Brightspace, copy and Paste this code into the Assignment submission text field.")
 	s.CurrentLab = ""
 	s.CurrentStep = -1
 	s.Save()
@@ -247,10 +272,10 @@ func (s *Status) Complete(labNum string, stepNum int) {
 func (s *Status) Save() {
 	json, err := json.MarshalIndent(s, "", "	")
 	if err != nil {
-		fmt.Printf("Error Marshaling Status Data")
+		pterm.Fatal.Printf("Error Marshaling Status Data")
 		os.Exit(1)
 	}
-	f, err := os.Create(ULConfig.Data + "/" + s.Username + ".json")
+	f, _ := os.Create(ULConfig.Data + "/" + s.Username + ".json")
 	f.Write(json)
 	//os.WriteFile(s.Username+".json", json, fs.)
 }
@@ -259,7 +284,7 @@ func ReadStatusFile(fileName string) *Status {
 	var s Status
 	jsonData, err := os.ReadFile(fileName)
 	if err != nil {
-		fmt.Printf("Could not open user status file: %v\n", err)
+		pterm.Fatal.Printf("Could not open user status file: %v\n", err)
 		os.Exit(1)
 	}
 	json.Unmarshal(jsonData, &s)

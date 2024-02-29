@@ -161,9 +161,10 @@ func (l *Lab) PrintStep(stepNum int) {
 func (s *Step) PrintTasks(stepNum int) {
 	primary := pterm.NewStyle(pterm.FgBlack, pterm.BgCyan)
 	secondary := pterm.NewStyle(pterm.FgBlack, pterm.BgLightYellow)
-	pterm.Println(primary.Sprintf("\n Step %d: ", stepNum+1) + pterm.Sprintf(" %s\n", s.Text))
+	pterm.Println(primary.Sprintf("\n Step %d: ", stepNum+1) + pterm.Cyan(pterm.Sprintf(" %s\n", s.ShortText)))
+	pterm.DefaultParagraph.Println(pterm.LightYellow("-> ") + s.Text)
 	//fmt.Printf("Step %d: %s\n\n", stepNum+1, s.Text)
-	fmt.Println("Perform the following tasks/commands:")
+	pterm.DefaultSection.Println("Perform the following tasks/commands:")
 	bulletListItems := "" /*pterm.BulletListItem{
 		{Level: 0, Text: "Level 0"}, // Level 0 item
 		{Level: 1, Text: "Level 1"}, // Level 1 item
@@ -205,7 +206,7 @@ func OpenLabFile(labNum string) *Lab {
 	//fmt.Printf("Opening lab file %s\n", filepath)
 	labJson, err := os.ReadFile(filepath)
 	if err != nil {
-		fmt.Printf("Could not read data file for Lab %s: ", labNum)
+		pterm.Error.Printf("Could not read data file for Lab %s: ", labNum)
 		os.Exit(1)
 		return nil
 	} else {

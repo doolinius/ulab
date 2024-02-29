@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/user"
 	"strconv"
-	"strings"
 
 	"github.com/doolinius/ulab"
 	"github.com/pterm/pterm"
@@ -17,7 +16,7 @@ func main() {
 	//var userStatus ulab.Status
 	user, err := user.Current()
 	if err != nil {
-		fmt.Printf("User information not found.\n")
+		pterm.Error.Printf("User information not found.\n")
 		os.Exit(1)
 	}
 	//fmt.Println("Data File: ", ulab.ULConfig.Data+"/"+user.Username+".json")
@@ -35,63 +34,69 @@ func main() {
 		inProgressCheck(userStatus)
 		// make sure user in HOME directory
 		if os.Getenv("PWD") != os.Getenv("HOME") {
-			fmt.Printf("Labs must be restarted in your HOME directory. Please 'cd' to your home directory and try again.\n\n")
+			pterm.Warning.Println("Labs must be restarted in your HOME directory. Please 'cd' to your home directory and try again.")
+			//fmt.Printf("Labs must be restarted in your HOME directory. Please 'cd' to your home directory and try again.\n\n")
 			os.Exit(1)
 		}
 		// Are you sure prompt
-		answer := yesOrNo("WARNING: By restarting this lab, you will erase all current progress, including all steps and flags, and begin from the start.\n\n\tAre you sure? ")
-		if answer == "no" {
+		pterm.Warning.Printf("By restarting this lab, you will erase all current progress, including all steps and flags, and begin from the start.\n\n")
+		answer, _ := pterm.DefaultInteractiveConfirm.Show()
+		if !answer {
 			os.Exit(1)
-		} else {
-			fmt.Printf("Restarting lab %s...", userStatus.CurrentLab)
-		}
+		} //else {
+		//fmt.Printf("Restarting lab %s...", userStatus.CurrentLab)
+		//}
 
 		// delete lab data files
 		_, err := os.Stat("lab_data")
-		if os.IsNotExist(err) {
-			fmt.Printf("Lab data folder does not exist.")
-			os.Exit(1)
-		}
-		fmt.Printf("Removing lab data files...\n")
-		rmerr := os.RemoveAll("lab_data/")
-		if rmerr != nil {
-			fmt.Printf("Error removing lab data files: %v\n", rmerr)
+		if !os.IsNotExist(err) {
+			rmerr := os.RemoveAll("lab_data/")
+			if rmerr != nil {
+				fmt.Printf("Error removing lab data files: %v\n", rmerr)
+			}
+			//fmt.Printf("Lab data folder does not exist.")
+			//os.Exit(1)
 		}
 
 		// start lab
 		labStart(userStatus.CurrentLab, user, userStatus)
 	case "start":
 		if len(os.Args) != 3 {
-			fmt.Printf("A lab number must be supplied when starting a new lab.\n")
+			pterm.Error.Printf("A lab number must be supplied when starting a new lab.\n")
 			printUsage()
 			os.Exit(1)
 		}
 		//fmt.Printf("Starting Lab %s\n", os.Args[2])
 		if userStatus.LabComplete(os.Args[2]) {
-			fmt.Printf("This lab has already been submitted. If you start this lab again, you will ERASE your previous submission and begin a new one.\n\n")
-			answer := yesOrNo("Are you sure you want to start a new attempt? ")
-			if answer == "no" {
+			pterm.Warning.Printf("This lab has already been submitted. If you start this lab again, you will ERASE your previous submission and begin a new one.\n\n")
+			//fmt.Printf("This lab has already been submitted. If you start this lab again, you will ERASE your previous submission and begin a new one.\n\n")
+			//answer := yesOrNo("Are you sure you want to start a new attempt? ")
+			answer, _ := pterm.DefaultInteractiveConfirm.Show("Are you sure you want to start a new attempt?")
+			if !answer {
 				os.Exit(1)
 			} else {
-				fmt.Printf("\nErasing prior attempt and starting lab...\n\n")
+				pterm.Info.Printf("Erasing prior attempt and starting lab...\n\n")
 			}
 		}
 
 		// make sure user in HOME directory
 		if os.Getenv("PWD") != os.Getenv("HOME") {
-			fmt.Printf("Labs should always be started in your HOME directory. Please 'cd' to your home directory and try again.\n\n")
+			pterm.Error.Println("Labs should always be started in your HOME directory. Please 'cd' to your home directory and try again.")
+			//fmt.Printf("Labs should always be started in your HOME directory. Please 'cd' to your home directory and try again.\n\n")
 			os.Exit(1)
 		}
 
 		curLabNum, labInProgress := userStatus.InProgress()
 		if labInProgress {
-			answer := ""
-			fmt.Printf("Lab %s appears to be in progress. ", curLabNum)
+			//answer := ""
+			pterm.Warning.Printf("Lab %s appears to be in progress.\nYou must submit this lab before starting a new one.\n", curLabNum)
+			//fmt.Printf("Lab %s appears to be in progress. ", curLabNum)
 			// printLabStatus(user)
-			fmt.Printf("\nYou must submit this lab before starting a new one.\n")
+			//fmt.Printf("\nYou must submit this lab before starting a new one.\n")
 			submitPrompt := fmt.Sprintf("Would you like to submit Lab %s before starting the new one?", curLabNum)
-			answer = yesOrNo(submitPrompt)
-			if answer == "yes" {
+			//answer = yesOrNo(submitPrompt)
+			answer, _ := pterm.DefaultInteractiveConfirm.Show(submitPrompt)
+			if answer {
 				lab := ulab.OpenLabFile(curLabNum)
 				labSubmit(userStatus, lab)
 			} else {
@@ -132,12 +137,14 @@ func main() {
 		inProgressCheck(userStatus)
 		pwdCheck(userStatus)
 		if len(os.Args) != 3 {
-			fmt.Printf("A flag number must be supplied when capturing a flag.\n")
+			pterm.Error.Println("A flag number must be supplied when capturing a flag.")
+			//fmt.Printf("A flag number must be supplied when capturing a flag.\n")
 			//printUsage()
 		} else {
 			flagNum, err := strconv.Atoi(os.Args[2])
 			if err != nil {
-				fmt.Printf("Flag must be a valid number")
+				pterm.Error.Println("The flag must be a valid four digit number.")
+				//fmt.Printf("Flag must be a valid number")
 			}
 			lab := ulab.OpenLabFile(userStatus.CurrentLab)
 			if lab.CheckFlag(flagNum) {
@@ -166,24 +173,26 @@ func main() {
 		labSubmit(userStatus, lab)
 	case "score":
 		if len(os.Args) != 3 {
-			fmt.Printf("A lab number must be supplied when starting a new lab.\n")
+			pterm.Error.Println("A lab number must be supplied to view the score of a lab.")
+			//fmt.Printf("A lab number must be supplied when starting a new lab.\n")
 			printUsage()
 		} else {
 			// if the user has completed the lab
 			if userStatus.LabComplete(os.Args[2]) {
 				// show the report
-				fmt.Printf("Score Report for Lab %s\n\n", os.Args[2])
+				//fmt.Printf("Score Report for Lab %s\n\n", os.Args[2])
 				userStatus.ScoreReport(os.Args[2])
 			} else {
 				// TODO: Check to see if it is a valid lab at all
-				fmt.Printf("Lab %s has not been submitted yet.\n", os.Args[2])
+				pterm.Warning.Printf("Lab %s has not been submitted yet.\n", os.Args[2])
+				//fmt.Printf("Lab %s has not been submitted yet.\n", os.Args[2])
 				os.Exit(1)
 			}
 		}
 	case "help":
 		printUsage()
 	default:
-		fmt.Printf("Unrecognized sub-command.\n")
+		fmt.Printf("Unrecognized sub-command '%s'.\n", os.Args[2])
 		printUsage()
 	}
 }
@@ -219,7 +228,7 @@ func labCheck(s *ulab.Status) {
 			labNext(l, s)
 			//}
 		} else {
-			fmt.Printf("  You have completed the steps for this lab. You may now submit it for grading with 'lab submit'\n\n")
+			pterm.Success.Printf("You have completed the steps for this lab. You may now submit it for grading with 'lab submit'\n")
 		}
 	}
 }
@@ -254,33 +263,38 @@ func labSubmit(s *ulab.Status, l *ulab.Lab) {
 	done := true // if there any unfinished steps, or uncaptured flags
 	result := s.GetResults(l.Number)
 	success, stepsTotal := result.StepStatus()
+	message := ""
 	if success == stepsTotal {
-		fmt.Printf("Great job, you've finished all of the steps for this lab!\n")
+		//fmt.Printf("Great job, you've finished all of the steps for this lab!\n")
 	} else {
-		fmt.Printf("You have %d steps left to complete.\n", stepsTotal-success)
+		message += fmt.Sprintf("You have %d steps left to complete.\n", stepsTotal-success)
 		done = false
 	}
 	flagsCaptured := len(result.Flags)
 	flagsTotal := result.TotalFlags
 	if flagsCaptured == flagsTotal {
-		fmt.Printf("Nicely done, you've captured all of the flags for this lab!\n")
+		//fmt.Printf("Nicely done, you've captured all of the flags for this lab!\n")
 	} else {
-		fmt.Printf("You have %d flags left to capture.\n", flagsTotal-flagsCaptured)
+		message += fmt.Sprintf("You have %d flags left to capture.\n", flagsTotal-flagsCaptured)
 		done = false
 	}
 	if !done {
+		pterm.Warning.Println(message, "This lab is not completed. Would you still like to submit?")
 		// prompt "Are you sure?"
-		answer := yesOrNo("This lab is not completed. Would you still like to submit?")
-		if answer == "no" {
+		//answer := yesOrNo("This lab is not completed. Would you still like to submit?")
+		answer, _ := pterm.DefaultInteractiveConfirm.Show()
+		if !answer {
 			os.Exit(1)
 		}
 	}
-	s.ScoreReport(l.Number)
 	s.Submit(l)
-	fmt.Printf("%s\n", l.SubmitMessage)
+	s.ScoreReport(l.Number)
+	pterm.DefaultSection.Printf("%s\n", l.SubmitMessage)
+	//fmt.Printf("%s\n", l.SubmitMessage)
 	// copy command history file
 }
 
+/*
 func yesOrNo(prompt string) string {
 	fmt.Printf("%s ", prompt)
 	answer := ""
@@ -290,7 +304,7 @@ func yesOrNo(prompt string) string {
 		answer = strings.ToLower(answer)
 	}
 	return (answer)
-}
+}*/
 
 func labStart(labNum string, u *user.User, s *ulab.Status) {
 	//fmt.Printf("Attempting to start Lab %s\n", labNum)
@@ -333,22 +347,25 @@ func labStart(labNum string, u *user.User, s *ulab.Status) {
 
 }
 
+/*
 func printLabStatus(s *ulab.Status) {
 	fmt.Printf("Printing lab status")
-}
+}*/
 
 func pwdCheck(s *ulab.Status) {
 	if os.Getenv("PWD") != s.LastPWD {
-		fmt.Printf("You are not in the correct directory to continue this lab\n\n")
-		fmt.Printf("Please 'cd' to %s\n", s.LastPWD)
+		pterm.Warning.Printf("You are not in the correct directory to continue this lab\nPlease 'cd' to %s\n", s.LastPWD)
+		//fmt.Printf("You are not in the correct directory to continue this lab\n\n")
+		//fmt.Printf("Please 'cd' to %s\n", s.LastPWD)
 		os.Exit(2)
 	}
 }
 
 func inProgressCheck(s *ulab.Status) {
 	if s.CurrentLab == "" {
-		fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
-		fmt.Printf("\n\tlab start <lab number>\n\n")
+		pterm.Warning.Println("There is not currently a lab in progress. Start a lab with:\n\tlab start <lab number>")
+		//fmt.Printf("There is not currently a lab in progress. Start a lab with:\n")
+		//fmt.Printf("\n\tlab start <lab number>\n\n")
 		os.Exit(1)
 	}
 }
