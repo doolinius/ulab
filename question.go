@@ -69,7 +69,7 @@ func (q *Question) getTF() int {
 }
 
 func (q *Question) getOption() int {
-	selectedOption, _ := pterm.DefaultInteractiveSelect.WithFilter(false).WithOptions(q.Options).Show()
+	selectedOption, _ := pterm.DefaultInteractiveSelect.WithFilter(false).WithOptions(q.Options).Show(q.Text)
 
 	return getInt(selectedOption, q.Options)
 }
